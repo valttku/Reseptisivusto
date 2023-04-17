@@ -1,8 +1,7 @@
 import {useState} from "react";
-
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import userDetails from './userDetails.json';
-
+import axios from 'axios';
 
 function SignIn() {
     // Sign in form state
@@ -52,15 +51,23 @@ function SignIn() {
             return;
         }
 
-        // Create new user
-        const newUser = {
-            userName: registerUsername,
-            password: registerPassword,
-            email: registerEmail,
+        const formData = {
+            username: signinUsername,
+            password: signinPassword
         };
 
+        axios.post('/SignIn', formData)
+            .then((response) => {
+                alert(response.data.message);
+                setSigninUsername('');
+                setSigninPassword('');
+            })
+            .catch((error) => {
+                alert(error.response.data.message);
+            });
+
         // Add user to userDetails array
-        userDetails.push(newUser);
+        userDetails.push(formData);
 
         // Save updated userDetails to localStorage
         localStorage.setItem('userDetails', JSON.stringify(userDetails));
