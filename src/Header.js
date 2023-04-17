@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Navbar, Nav, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
+import { Link } from 'react-router-dom';
 
 function Header(props) {
     const [searchQuery, setSearchQuery] = useState('');
@@ -24,24 +25,26 @@ function Header(props) {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <section id={"navigate"}>
-                <Nav className="mr-auto">
-                    <Nav.Link href="#page1">Page 1</Nav.Link>
-                    <Nav.Link href="#page2">Page 2</Nav.Link>
-                    <Nav.Link href="#page3">Page 3</Nav.Link>
-                    <Nav.Link href="#page4">Page 4</Nav.Link>
-                </Nav>
-                <Form inline="true" onSubmit={handleSearch}>
-                    <Form.Control
-                        type="text"
-                        placeholder="Search"
-                        className="mr-sm-2"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <Button variant="outline-success" type="submit" inline="true">
-                        Search
-                    </Button>
-                </Form>
+                    <Nav className="mr-auto">
+                        <ul>
+                            <li><Link to="/">Page1</Link></li>
+                            <li><Link to="/">Page2</Link></li>
+                            <li><Link to="/">Page3</Link></li>
+                            <li><Link to="/SignIn">SignIn</Link></li>
+                        </ul>
+                    </Nav>
+                    <Form inline="true" onSubmit={handleSearch}>
+                        <Form.Control
+                            type="text"
+                            placeholder="Search"
+                            className="mr-sm-2"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <Button variant="outline-success" type="submit" inline="true">
+                            Search
+                        </Button>
+                    </Form>
                 </section>
             </Navbar.Collapse>
         </Navbar>
