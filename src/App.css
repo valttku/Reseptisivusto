@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  font-family: schroedersdiet;
+}
+
+.imageHolder {
+  text-align: center;
+}
+
+/* Tällä saadaan cropattua kuva ja asetettua kuvan näkyvä osuus keskelle */
+.cropped-image {
+  width: 350px;
+  height: 500px;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+

@@ -9,7 +9,12 @@ function Results({ searchResults }) {
                     <Col>
                         <h1>{result.name}</h1>
                         <p>{result.description}</p>
-                        <Image src={result.image} alt={result.description} fluid />
+                        <Image
+                            src={result.image}
+                            alt={result.description}
+                            fluid
+                            className="cropped-image"
+                        />
                     </Col>
                 </Row>
             ))}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navbar, Nav, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 function Header(props) {
     const [searchQuery, setSearchQuery] = useState('');
@@ -24,24 +24,19 @@ function Header(props) {
             <Navbar.Brand id="topheading" href="#home">My Recipe App</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <section id={"navigate"}>
-                    <Nav className="mr-auto">
-                        <ul>
-                            <li><Link to="/">Page1</Link></li>
-                            <li><Link to="/">Page2</Link></li>
-                            <li><Link to="/">Page3</Link></li>
-                            <li><Link to="/SignIn">SignIn</Link></li>
-                        </ul>
-                    </Nav>
-                    <Form inline="true" onSubmit={handleSearch}>
+                <section id="navigate">
+                    <NavLink to="/SignIn" className="nav-link">
+                        Sign In
+                    </NavLink>
+                    <Form inline onSubmit={handleSearch}>
                         <Form.Control
                             type="text"
-                            placeholder="Search"
+                            placeholder="Find a recipe"
                             className="mr-sm-2"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                        <Button variant="outline-success" type="submit" inline="true">
+                        <Button variant="outline-success" type="submit">
                             Search
                         </Button>
                     </Form>

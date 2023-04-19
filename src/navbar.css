@@ -1,0 +1,30 @@
+.navbar {
+    background-color: #fff;
+    padding: 20px;
+}
+
+#topheading {
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+}
+
+#navigate {
+    width: 90%;
+    display: flex;
+    justify-content: right;
+}
+
+#navigate Form {
+    display: flex;
+}
+
+.nav-link {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.nav-link:hover {
+    color: grey;
+}

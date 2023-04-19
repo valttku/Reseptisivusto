@@ -5,6 +5,9 @@ import Results from './Results.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
 
+import './App.css'
+import './navbar.css';
+
 function App() {
     const [searchResults, setSearchResults] = useState([]);
 
@@ -23,4 +26,3 @@ function App() {
 
 export default App;
 
-// Testikommentti
