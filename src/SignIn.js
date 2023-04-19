@@ -52,33 +52,23 @@ function SignIn() {
         }
 
         const formData = {
-            username: signinUsername,
-            password: signinPassword
+            username: registerUsername,
+            email: registerEmail,
+            password: registerPassword,
         };
 
-        axios.post('/SignIn', formData)
+        axios
+            .post('/SignIn', formData) //Tästä se errori tulee, POST url takia tulee selaimessa 404 errori eli ei löydä sitä.
             .then((response) => {
-                alert(response.data.message);
-                setSigninUsername('');
-                setSigninPassword('');
+                alert(response.data);
+                setRegisterUsername('');
+                setRegisterEmail('');
+                setRegisterPassword('');
             })
             .catch((error) => {
-                alert(error.response.data.message);
+                alert('Error registering user');
+                console.log(error);
             });
-
-        // Add user to userDetails array
-        userDetails.push(formData);
-
-        // Save updated userDetails to localStorage
-        localStorage.setItem('userDetails', JSON.stringify(userDetails));
-
-        // Show success message
-        alert('User registered successfully');
-
-        // Reset form fields
-        setRegisterUsername('');
-        setRegisterEmail('');
-        setRegisterPassword('');
     };
 
     return (
