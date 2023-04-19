@@ -1,0 +1,98 @@
+.formRecipe {
+    margin: 0 auto;
+    width:50%;
+    justify-content: center;
+    border-style: solid;
+    border-radius: 80px;
+}
+.add{
+    text-align: center;
+}
+label {
+    display: block;
+    margin-top: 10px;
+    margin-left: 100px;
+    font-size: 18px;
+    font-weight: bold;
+    width:80%;
+}
+
+h1, h3, p{
+    text-align: center;
+}
+input,
+textarea,
+select {
+    display: block;
+    margin-left: 200px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width:50%;
+}
+
+select[multiple] {
+    height: 150px;
+}
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin:auto;
+}
+.form-row-last{
+
+    text-align: center;
+    margin:10px;
+    padding:10px;
+}
+.form-row-last button{
+    border: solid 3px black;
+    border-radius: 5px;
+}
+.SigninForm {
+    display: flex;
+    margin: 10px auto;
+    width:50%;
+    justify-content: center;
+    border-style: solid;
+    border-radius: 80px;
+    margin-bottom: 100px;
+}
+.SigninForm button{
+    margin: 10px;
+    padding:0;
+    width: 100px;
+    height: 40px;
+}
+
+.registerForm {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width:50%;
+    justify-content: center;
+    border-style: solid;
+    border-radius: 80px;
+}
+.control{
+    border: solid 3px black;
+    width:60%;
+    margin-right: 5px;
+    margin-left: auto;
+
+}
+
+.Signin {
+    width:100%;
+    margin:auto;
+}
+.Signinbody{
+    width:75%;
+    margin:auto;
+}
+.registerForm .form-row{
+    width:60%;
+}
+.registerForm .form-row button{
+    width:10%;
+}

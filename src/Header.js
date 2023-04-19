@@ -3,6 +3,7 @@ import { Navbar, Nav, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
 import { NavLink } from 'react-router-dom';
+import App from "./App";
 
 function Header(props) {
     const [searchQuery, setSearchQuery] = useState('');
@@ -25,6 +26,9 @@ function Header(props) {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <section id="navigate">
+                    <NavLink to="/NewRecipe" className="nav-link">
+                        Add new recipe
+                    </NavLink>
                     <NavLink to="/SignIn" className="nav-link">
                         Sign In
                     </NavLink>

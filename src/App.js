@@ -16,7 +16,7 @@ function App() {
     };
 
     return (
-        <div>
+        <div id ="Home">
             <Header setSearchResults={handleSearchResults} />
             <Body />
             {searchResults.length > 0 && <Results searchResults={searchResults} />}

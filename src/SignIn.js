@@ -1,7 +1,10 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import userDetails from './userDetails.json';
 import axios from 'axios';
+import Header from "./Header";
+
+
 
 function SignIn() {
     // Sign in form state
@@ -18,7 +21,7 @@ function SignIn() {
         event.preventDefault();
 
         // Find user by username and password
-        const userExists = userDetails.find((user) => {
+       const userExists = userDetails.find((user) => {
             return user.userName === signinUsername && user.password === signinPassword;
         });
 
@@ -82,34 +85,41 @@ function SignIn() {
     };
 
     return (
-        <Container>
+        <main className="Signin">
+            <Header/>
+            <body className="Signinbody">
             <Row>
                 <Col>
                     <h1>Sign in</h1>
-                    <Form onSubmit={handleSigninSubmit}>
-                        <Form.Group controlId="formSigninUsername">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter username"
-                                value={signinUsername}
-                                onChange={(event) => setSigninUsername(event.target.value)}
-                            />
+                    <Form onSubmit={handleSigninSubmit} className = "SigninForm">
+                        <Form.Group controlId="formSigninUsername" className="form-row">
+                            <Form.Label className = "signinlabel" column sm={2}>Username</Form.Label>
+                            <Col sm={10}>
+                                <Form.Control
+                                    className = "control"
+                                    type="text"
+                                    placeholder="Enter username"
+                                    value={signinUsername}
+                                    onChange={(event) => setSigninUsername(event.target.value)}
+                                />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group controlId="formSigninPassword" className="form-row">
+                            <Form.Label className = "signinlabel"  column sm={2}>Password</Form.Label>
+                            <Col sm={10}>
+                                <Form.Control
+                                    className = "control"
+                                    type="password"
+                                    placeholder="Password"
+                                    value={signinPassword}
+                                    onChange={(event) => setSigninPassword(event.target.value)}
+                                />
+                            </Col>
                         </Form.Group>
 
-                        <Form.Group controlId="formSigninPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                type="password"
-                                placeholder="Password"
-                                value={signinPassword}
-                                onChange={(event) => setSigninPassword(event.target.value)}
-                            />
-                        </Form.Group>
-
-                        <Button variant="primary" type="submit">
-                            Submit
-                        </Button>
+                        <div className="form-row-last">
+                            <button variant="primary" type="submit">Submit</button>
+                        </div>
                     </Form>
                 </Col>
             </Row>
@@ -117,44 +127,54 @@ function SignIn() {
                 <Col>
                     <h3>If you are signing in for the first time, then please register a new account first:</h3>
                     <h1>Register</h1>
-                    <Form onSubmit={handleRegisterSubmit}>
-                        <Form.Group controlId="formRegisterUsername">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter username"
-                                value={registerUsername}
-                                onChange={(event) => setRegisterUsername(event.target.value)}
-                            />
+                    <Form onSubmit={handleRegisterSubmit} className="registerForm">
+                        <Form.Group controlId="formRegisterUsername" className="form-row">
+                            <Form.Label className = "registerlabel" column sm={2}>Username</Form.Label>
+                            <Col sm={10}>
+                                <Form.Control
+                                    className = "control"
+                                    type="text"
+                                    placeholder="Enter username"
+                                    value={registerUsername}
+                                    onChange={(event) => setRegisterUsername(event.target.value)}
+                                />
+                            </Col>
                         </Form.Group>
 
-                        <Form.Group controlId="formEmail">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control
-                                type="email"
-                                placeholder="Enter email"
-                                value={registerEmail}
-                                onChange={(event) => setRegisterEmail(event.target.value)}
-                            />
+                        <Form.Group controlId="formEmail" className="form-row">
+                            <Form.Label className = "registerlabel" column sm={2}>Email address</Form.Label>
+                            <Col sm={10}>
+                                <Form.Control
+                                    className = "control"
+                                    type="email"
+                                    placeholder="Enter email"
+                                    value={registerEmail}
+                                    onChange={(event) => setRegisterEmail(event.target.value)}
+                                />
+                            </Col>
                         </Form.Group>
 
-                        <Form.Group controlId="formPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                type="password"
-                                placeholder="Password"
-                                value={registerPassword}
-                                onChange={(event) => setRegisterPassword(event.target.value)}
-                            />
+                        <Form.Group controlId="formPassword" className="form-row">
+                            <Form.Label className = "registerlabel" column sm={2}>Password</Form.Label>
+                            <Col sm={10}>
+                                <Form.Control
+                                    className = "control"
+                                    type="password"
+                                    placeholder="Password"
+                                    value={registerPassword}
+                                    onChange={(event) => setRegisterPassword(event.target.value)}
+                                />
+                            </Col>
                         </Form.Group>
 
-                        <Button variant="primary" type="submit">
-                            Submit
-                        </Button>
+                        <div className="form-row-last">
+                            <button variant="primary" type="submit">Submit</button>
+                        </div>
                     </Form>
                 </Col>
             </Row>
-        </Container>
+        </body>
+        </main>
     );
 }
 
