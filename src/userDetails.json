@@ -2,7 +2,8 @@
 [
   {
     "userName": "GordonR",
-    "password": "GordonIsBest",
-    "email": "gordon@chefnetwork.com"
+    "email": "gordon@chefnetwork.com",
+    "password": "GordonIsBest"
+
   }
 ]

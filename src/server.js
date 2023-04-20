@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const users = require("./userDetails.json");
 require('dotenv').config();
 
 const app = express();
@@ -27,9 +28,17 @@ connection.connect((error) => {
 
 });
 app.post('/signin', (req, res) => {
-    const { username, password, email } = req.body;
-    const query = `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`;
-    connection.query(query, [username, password], (error, results) => {
+    const { username, email, password } = req.body;
+    console.log("Tässä uusi käyttäjä: " + JSON.stringify(req.body));
+    const users = require("./userDetails.json");
+    console.log("Tässä kaikki käyttäjät:");
+    console.dir(users);
+    users.push(req.body);
+    console.log("Tässä kaikki käyttäjät uudelleen:");
+    console.dir(users);
+
+    const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
+    connection.query(query, [username, email, password], (error, results) => {
         if (error) {
             console.log('Error querying database:', error);
             res.status(500).json({ message: 'Internal server error' });
@@ -39,16 +48,17 @@ app.post('/signin', (req, res) => {
             res.status(200).json({ message: 'Authentication successful' });
         }
     });
+    res.send("OK");
 });
-const query = 'INSERT INTO users (username, password, email) VALUES (?, ?, ?)';
-const values = ['user123', 'password123', 'lol@gmail.com'];
+const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+const values = ['user123', 'lol@gmail.com', 'password123'];
 
 connection.query(query, values, (error, results, fields) => {
     if (error) throw error;
     console.log('User details saved successfully!');
 });
 // Start server
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+    console.log(`1Server started on port ${PORT}`);
 });

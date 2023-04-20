@@ -60,8 +60,8 @@ function SignIn() {
 
         const formData = {
             username: registerUsername,
-            password: registerPassword,
             email: registerEmail,
+            password: registerPassword,
         };
         const form = event.target;
         //Testing
@@ -76,7 +76,7 @@ function SignIn() {
 
         //fetch('/signin', { method: form.method, body: formData });
         axios
-            .post('http://localhost:3000/signin', formData) //Tästä se errori tulee, POST url takia tulee selaimessa 404 errori eli ei löydä sitä.
+            .post('http://localhost:3001/signin', formData) //Tästä se errori tulee, POST url takia tulee selaimessa 404 errori eli ei löydä sitä.
             .then((response) => {
                 setPost(response.data);
                 setRegisterUsername('');
