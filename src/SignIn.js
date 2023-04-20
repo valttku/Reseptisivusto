@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import userDetails from './userDetails.json';
 import axios from 'axios';
 import Header from "./Header";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
@@ -21,7 +22,7 @@ function SignIn() {
         event.preventDefault();
 
         // Find user by username and password
-       const userExists = userDetails.find((user) => {
+        const userExists = userDetails.find((user) => {
             return user.userName === signinUsername && user.password === signinPassword;
         });
 
@@ -55,33 +56,23 @@ function SignIn() {
         }
 
         const formData = {
-            username: signinUsername,
-            password: signinPassword
+            username: registerUsername,
+            email: registerEmail,
+            password: registerPassword,
         };
 
-        axios.post('/SignIn', formData)
+        axios
+            .post('SignIn', formData) //Tästä se errori tulee, POST url takia tulee selaimessa 404 errori eli ei löydä sitä.
             .then((response) => {
-                alert(response.data.message);
-                setSigninUsername('');
-                setSigninPassword('');
+                alert(response.data);
+                setRegisterUsername('');
+                setRegisterEmail('');
+                setRegisterPassword('');
             })
             .catch((error) => {
-                alert(error.response.data.message);
+                alert('Error registering user');
+                console.log(error);
             });
-
-        // Add user to userDetails array
-        userDetails.push(formData);
-
-        // Save updated userDetails to localStorage
-        localStorage.setItem('userDetails', JSON.stringify(userDetails));
-
-        // Show success message
-        alert('User registered successfully');
-
-        // Reset form fields
-        setRegisterUsername('');
-        setRegisterEmail('');
-        setRegisterPassword('');
     };
 
     return (
@@ -173,7 +164,7 @@ function SignIn() {
                     </Form>
                 </Col>
             </Row>
-        </body>
+            </body>
         </main>
     );
 }
