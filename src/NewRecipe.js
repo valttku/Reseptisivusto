@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from "./Header";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,7 +31,7 @@ const NewRecipe = () => {
         event.preventDefault();
         const recipe = {
             name,
-            ingredients: ingredients.split('\n'),
+            ingredients: ingredients.replace(/\n/g, ', '),
             category,
             author,
             url,
@@ -87,8 +86,51 @@ const NewRecipe = () => {
     };
 
     const handleImageChange = (event) => {
-        setImage(event.target.files[0]);
+        const imageFile = event.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onload = () => {
+            const imageDataUrl = reader.result;
+            const imageName = imageFile.name;
+            const imageType = imageFile.type.split('/')[1];
+            const imageSrc = `/img/${imageName}.${imageType}`;
+            const imageBlob = dataURLtoBlob(imageDataUrl);
+            saveImage(imageBlob, imageSrc);
+            setImage(imageSrc);
+        };
     };
+
+    const dataURLtoBlob = (dataURL) => {
+        const parts = dataURL.split(',');
+        const mimeType = parts[0].match(/:(.*?);/)[1];
+        const b64 = atob(parts[1]);
+        let n = b64.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = b64.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mimeType });
+    };
+
+    const saveImage = (blob, fileName) => {
+        const formData = new FormData();
+        formData.append('image', blob, fileName);
+
+        fetch('/save-image', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to save image');
+                }
+                console.log('Image saved successfully!');
+            })
+            .catch(error => {
+                console.error('Error saving image:', error);
+            });
+    };
+    //lisättävä server.js:ään koodia kuvan poimimista varten
 
     return (
         <Container>
@@ -107,7 +149,7 @@ const NewRecipe = () => {
                     <Col>
                         <Form.Group>
                             <Form.Label>Ingredients (one per line):</Form.Label>
-                            <Form.Control as="textarea" value={ingredients} onChange={(event) => setIngredients(event.target.value)} />
+                            <Form.Control as="textarea" rows={5} value={ingredients} onChange={(event) => setIngredients(event.target.value)} />
                         </Form.Group>
                     </Col>
                 </Row>
@@ -116,12 +158,10 @@ const NewRecipe = () => {
                         <Form.Group>
                             <Form.Label>Category:</Form.Label>
                             <Form.Control as="select" multiple value={category} onChange={handleCategoryChange}>
-                                <option value="dessert">Dessert</option>
-                                <option value="meat">Meat</option>
-                                <option value="seafood">Seafood</option>
-                                <option value="vegetarian">Vegetarian</option>
-                                <option value="vegan">Vegan</option>
-                                <option value="undefined">Undefined</option>
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Dessert">Dessert</option>
                             </Form.Control>
                         </Form.Group>
                     </Col>
@@ -150,31 +190,42 @@ const NewRecipe = () => {
                         </Form.Group>
                     </Col>
                 </Row>
-                <Form.Group controlId="cookTime">
-                    <Form.Label>Cook Time:</Form.Label>
-                    <Form.Control type="text" value={cookTime} onChange={(event) => setCookTime(event.target.value)} />
-                </Form.Group>
-
-                <Form.Group controlId="recipeYield">
-                    <Form.Label>Recipe Yield:</Form.Label>
-                    <Form.Control type="text" value={recipeYield} onChange={(event) => setRecipeYield(event.target.value)} />
-                </Form.Group>
-
-                <Form.Group controlId="date">
-                    <Form.Label>Date:</Form.Label>
-                    <Form.Control type="text" value={date} onChange={(event) => setDate(event.target.value)} />
-                </Form.Group>
-
-                <Form.Group controlId="prepTime">
-                    <Form.Label>Prep Time:</Form.Label>
-                    <Form.Control type="text" value={prepTime} onChange={(event) => setPrepTime(event.target.value)} />
-                </Form.Group>
-
-                <Form.Group controlId="description">
-                    <Form.Label>Description:</Form.Label>
-                    <Form.Control as="textarea" value={description} onChange={(event) => setDescription(event.target.value)} />
-                </Form.Group>
-
+                <Row>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Cook Time (minutes):</Form.Label>
+                            <Form.Control type="number" value={cookTime} onChange={(event) => setCookTime(event.target.value)} />
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Recipe Yield:</Form.Label>
+                            <Form.Control type="number" value={recipeYield} onChange={(event) => setRecipeYield(event.target.value)} />
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Date:</Form.Label>
+                            <Form.Control type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Prep Time (minutes):</Form.Label>
+                            <Form.Control type="number" value={prepTime} onChange={(event) => setPrepTime(event.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Group>
+                            <Form.Label>Description:</Form.Label>
+                            <Form.Control as="textarea" rows={5} value={description} onChange={(event) => setDescription(event.target.value)} />
+                        </Form.Group>
+                    </Col>
+                </Row>
                 <Button variant="primary" type="submit">Submit</Button>
 
             </Form>
