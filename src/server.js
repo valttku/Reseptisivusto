@@ -12,10 +12,10 @@ app.use(express.urlencoded({ extended: true }));
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'olso',
-    password: 'olso',
+    user: 'root',
+    password: 'root',
     database: 'recipes',
-    port: 3307
+    //port: 3307
 });
 
 connection.connect((error) => {
@@ -26,7 +26,7 @@ connection.connect((error) => {
     }
 
 });
-app.post('/SignIn', (req, res) => {
+app.post('/signin', (req, res) => {
     const { username, password, email } = req.body;
     const query = `INSERT INTO users (username, password, email) VALUES (?, ?, ?)`;
     connection.query(query, [username, password], (error, results) => {
@@ -48,7 +48,7 @@ connection.query(query, values, (error, results, fields) => {
     console.log('User details saved successfully!');
 });
 // Start server
-const PORT = 5000;
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });

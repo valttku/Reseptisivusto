@@ -44,6 +44,7 @@ const NewRecipe = () => {
             prepTime,
             description,
         };
+        //Testing
         console.log("Tässä uusi resepti: " + JSON.stringify(recipe));
         const recipes = require("./recipes.json");
         console.log("Tässä kaikki reseptit:");
