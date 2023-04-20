@@ -7,8 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
-
-
 function SignIn() {
     // Sign in form state
     const [signinUsername, setSigninUsername] = useState('');
@@ -90,7 +88,7 @@ function SignIn() {
     };
 
     return (
-        <Container fluid className="Signin">
+        <Container fluid className="Signin px-0">
             <Header />
             <Container className="Signinbody">
                 <Row>

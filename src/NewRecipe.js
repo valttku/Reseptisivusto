@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import recipes from './recipes.json'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
-
 const NewRecipe = () => {
     const [name, setName] = useState('');
     const [ingredients, setIngredients] = useState('');
@@ -93,7 +92,6 @@ const NewRecipe = () => {
 
     return (
         <Container>
-            <Header />
             <h1 className="add">Add your own recipe below</h1>
             <p className="add">Please fill out all sections of the form before you submit.</p>
             <Form onSubmit={handleSubmit} className="formRecipe">

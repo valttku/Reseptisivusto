@@ -17,12 +17,34 @@
 
 #navigate Form {
     display: flex;
+    margin-left: 30px;
+}
+
+#navigate Form .userInput {
+    border-radius: 12px;
+    border-width: 2px;
+    background-color: white;
+    border-color: black;
+    color: black;
+}
+
+#navigate Form Button {
+    border-radius: 12px;
+    border-width: 2px;
+    background-color: white;
+    border-color: black;
+    color: black;
+    margin-left: 20px;
+}
+
+#navigate Form Button:hover {
+    background-color: grey;
 }
 
 .nav-link {
     font-size: 20px;
-    font-weight: bold;
-    text-decoration: underline;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .nav-link:hover {

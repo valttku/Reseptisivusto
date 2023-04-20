@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
 
 import './App.css'
-import './navbar.css';
 
 function App() {
     const [searchResults, setSearchResults] = useState([]);

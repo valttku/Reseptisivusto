@@ -3,7 +3,7 @@ import { Navbar, Nav, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
 import { NavLink } from 'react-router-dom';
-import App from "./App";
+import './navbar.css'
 
 function Header(props) {
     const [searchQuery, setSearchQuery] = useState('');
@@ -36,7 +36,7 @@ function Header(props) {
                         <Form.Control
                             type="text"
                             placeholder="Find a recipe"
-                            className="mr-sm-2"
+                            className="mr-sm-2 userInput"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
