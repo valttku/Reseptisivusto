@@ -3,7 +3,6 @@ import Header from './Header.js';
 import Body from './Body.js';
 import Results from './Results.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import recipeData from './recipes.json';
 
 import './App.css'
 

@@ -4,49 +4,60 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
 
 function Body() {
-    const [recipe1, setRecipe1] = useState(null);
-    const [recipe2, setRecipe2] = useState(null);
+    const [displayedRecipes, setDisplayedRecipes] = useState([]);
 
     useEffect(() => {
-        let randomIndex1 = Math.floor(Math.random() * recipeData.length);
-        let randomIndex2 = Math.floor(Math.random() * recipeData.length);
-        while (randomIndex2 === randomIndex1) {
-            randomIndex2 = Math.floor(Math.random() * recipeData.length);
-        }
-        setRecipe1(recipeData[randomIndex1]);
-        setRecipe2(recipeData[randomIndex2]);
+        const getRandomRecipes = () => {
+            const randomIndexes = new Set();
+            while (randomIndexes.size < 6) {
+                randomIndexes.add(Math.floor(Math.random() * recipeData.length));
+            }
+            const randomRecipes = Array.from(randomIndexes).map(
+                (index) => recipeData[index]
+            );
+            setDisplayedRecipes(randomRecipes);
+        };
+        getRandomRecipes();
     }, []);
 
+    const handleShowMoreRecipes = () => {
+        const randomIndexes = new Set([...Array(recipeData.length).keys()]);
+        const remainingIndexes = [...randomIndexes].filter(
+            (index) => !displayedRecipes.some((recipe) => recipe.id === index)
+        );
+        const randomIndexesToAdd = new Set();
+        while (randomIndexesToAdd.size < 6 && remainingIndexes.length > 0) {
+            const randomIndex =
+                remainingIndexes[Math.floor(Math.random() * remainingIndexes.length)];
+            randomIndexesToAdd.add(randomIndex);
+            remainingIndexes.splice(remainingIndexes.indexOf(randomIndex), 1);
+        }
+        const randomRecipesToAdd = Array.from(randomIndexesToAdd).map(
+            (index) => recipeData[index]
+        );
+        setDisplayedRecipes((prevDisplayedRecipes) =>
+            prevDisplayedRecipes.concat(randomRecipesToAdd)
+        );
+    };
+
     return (
-        <Container>
+        <Container className="px-0">
             <Row>
                 <Col>
-                    <h1>Heading 1</h1>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere blandit risus, sed pellentesque odio vulputate id. Aliquam suscipit scelerisque diam vel facilisis. Nam sed justo mi. Sed posuere risus ac mauris vehicula efficitur. Proin convallis nisi vel congue molestie. Vivamus id libero in mi interdum mollis. In blandit sapien vel posuere euismod. Suspendisse potenti. Aenean ac ante sed quam euismod posuere a vel massa.
-                    </p>
-                    {recipe1 && (
-                        <div className="imageHolder">
-                            <Image
-                                src={recipe1.image}
-                                alt={recipe1.name}
-                                fluid
-                                className="cropped-image"
-                            />
-                            <p>{recipe1.name}</p>
-                        </div>
-                    )}
-                    {recipe2 && (
-                        <div className="imageHolder">
-                            <Image
-                                src={recipe2.image}
-                                alt={recipe2.name}
-                                fluid
-                                className="cropped-image"
-                            />
-                            <p>{recipe2.name}</p>
-                        </div>
-                    )}
+                    <div className="images">
+                        {displayedRecipes.map((recipe) => (
+                            <div className="imageHolder">
+                                <Image
+                                    src={recipe.image}
+                                    alt={recipe.name}
+                                    fluid
+                                    className="cropped-image"
+                                />
+                                <p id="caption">{recipe.name}</p>
+                            </div>
+                        ))}
+                        <button onClick={handleShowMoreRecipes} id="showMore">Show More</button>
+                    </div>
                 </Col>
             </Row>
         </Container>
