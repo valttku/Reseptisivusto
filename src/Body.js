@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
+import placeholderImage from './placeholder-image.jpg';
 
 function Body() {
     const [displayedRecipes, setDisplayedRecipes] = useState([]);
@@ -50,6 +51,9 @@ function Body() {
                                 <Image
                                     src={recipe.image}
                                     alt={recipe.name}
+                                    onError={(e) => {
+                                        e.target.src = placeholderImage;
+                                    }}
                                     fluid
                                     className="cropped-image"
                                 />
@@ -65,4 +69,3 @@ function Body() {
 }
 
 export default Body;
-
