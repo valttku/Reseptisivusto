@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from "./Header";
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipes from './recipes.json'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
@@ -52,24 +53,24 @@ const NewRecipe = () => {
         console.dir(recipes);
 
 
-        const newRecipes = [...recipes, recipe];
-        setRecipes(newRecipes);
-
-        fetch('./recipes.json', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ recipes: newRecipes }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                console.log('Recipe added successfully!');
+        axios
+            .post('http://localhost:3001/NewRecipe', recipe)
+            .then((response) => {
+                setAuthor('');
+                setImage('');
+                setDate('');
+                setCategory('');
+                setUrl('');
+                setRecipeYield('');
+                setCookTime('');
+                setPrepTime('');
+                setDescription('');
+                setIngredients('');
+                setName('');
             })
-            .catch(error => {
-                console.error('There was an error:', error);
+            .catch((error) => {
+                alert('Error registering user');
+                console.log(error);
             });
     };
 

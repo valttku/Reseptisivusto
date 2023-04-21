@@ -14,10 +14,10 @@ app.use(express.urlencoded({ extended: true }));
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: 'root',
+    user: 'olso',
+    password: 'olso',
     database: 'recipes',
-    //port: 3307
+    port: 3307
 });
 
 connection.connect((error) => {
@@ -58,13 +58,23 @@ app.post('/signin', (req, res) => {
     });
    // res.send("OK");
 });
-const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-const values = ['user123', 'lol@gmail.com', 'password123'];
 
-connection.query(query, values, (error, results, fields) => {
-    if (error) throw error;
-    console.log('User details saved successfully!');
+app.post('/NewRecipe', (req, res) => {
+    const { name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
+
+    const query = `INSERT INTO recipes (name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(query, [name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description], (error, results) => {
+        if (error) {
+            console.log('Error querying database:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        } else {
+            console.log('Recipe saved to database successfully!');
+            res.status(200).json({ message: 'Recipe saved to database successfully!' });
+        }
+    });
 });
+
 // Start server
 const PORT = 3001;
 app.listen(PORT, () => {
