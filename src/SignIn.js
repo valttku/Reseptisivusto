@@ -4,6 +4,8 @@ import userDetails from './userDetails.json';
 import axios from 'axios';
 import Header from "./Header";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import NewRecipe from "./NewRecipe";
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -18,6 +20,8 @@ function SignIn() {
     const [registerPassword, setRegisterPassword] = useState('');
     const [post, setPost]= React.useState(null);
     const [signedIn, setSignedIn] = useState(false);
+    const navigate = useNavigate();
+    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
 
     // Sign in form submit handler
     const handleSigninSubmit = (event) => {
@@ -34,14 +38,17 @@ function SignIn() {
             return;
         }
 
-
         // Show welcome message if user found
         alert('Welcome ' + signinUsername);
         setSignedIn(true);
 
+        // Redirect to homepage
+
+
         // Reset form fields
         setSigninUsername('');
         setSigninPassword('');
+        navigate('/');
     };
 
     // Register form submit handler
@@ -50,7 +57,7 @@ function SignIn() {
 
         // Check if user already exists
         const userExists = userDetails.find((user) => {
-            return user.userName === registerUsername || user.email === registerEmail;
+            return user.username === registerUsername || user.email === registerEmail;
         });
 
         // Show error if user already exists
@@ -89,7 +96,16 @@ function SignIn() {
                 console.log(error);
             });
     };
-if (!signedIn) {
+
+    function handleRegistrationClick() {
+        if(!showRegistrationForm){
+        setShowRegistrationForm(true);}
+        else{
+            setShowRegistrationForm(false);
+        }
+    }
+
+if(!showRegistrationForm){
     return (
         <Container fluid className="Signin px-0">
             <Header/>
@@ -116,15 +132,51 @@ if (!signedIn) {
                                     onChange={(event) => setSigninPassword(event.target.value)}
                                 />
                             </Form.Group>
-                            <Button variant="primary" type="submit" id="signinbutton">Submit</Button>
+                            <Button variant="primary" type="submit" id="signinbutton">Sign in</Button>
+                            <p>If you are a first time user, register first:</p>
+                            <Button variant="secondary" type="button" id="openregistration" onClick={handleRegistrationClick}>Open registration</Button>
+                        </Form>
+                    </Col>
+                </Row>
+            </Container>
+        </Container>
+    );} else{
+    return(
+        <Container fluid className="Signin px-0">
+            <Header/>
+            <Container className="Signinbody">
+                <Row>
+                    <Col>
+                        <h1>Sign in</h1>
+                        <Form onSubmit={handleSigninSubmit}>
+                            <Form.Group controlId="formSigninUsername">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter username"
+                                    value={signinUsername}
+                                    onChange={(event) => setSigninUsername(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="formSigninPassword">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Password"
+                                    value={signinPassword}
+                                    onChange={(event) => setSigninPassword(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Button variant="primary" type="submit" id="signinbutton">Sign in</Button>
+                            <p>If you are a first time user, register first:</p>
+                            <Button variant="secondary" type="button" id="openregistration" onClick={handleRegistrationClick}>Open registration</Button>
                         </Form>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <h3>If you are signing in for the first time, then please register a new account first:</h3>
                         <h1>Register</h1>
-                        <Form method="post" onSubmit={handleRegisterSubmit}>
+                        <Form method="post" onSubmit={handleRegisterSubmit} autocomplete="off">
                             <Form.Group controlId="formRegisterUsername">
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control
@@ -158,21 +210,9 @@ if (!signedIn) {
                 </Row>
             </Container>
         </Container>
-    );
-} else {
-    return (
-    <Container fluid className="Signin px-0">
-        <Header/>
-        <Container className="Signinbody">
-            <Row>
-                <Col>
-    <p>You {signinUsername} are signed In!</p>
-                </Col>
-            </Row>
-        </Container>
-    </Container>
-        );
+    )
 }
+
         }
 
 
