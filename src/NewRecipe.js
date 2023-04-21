@@ -6,10 +6,11 @@ import recipes from './recipes.json'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
 const NewRecipe = () => {
+    const signinUsername = localStorage.getItem('signinUsername');
     const [name, setName] = useState('');
     const [ingredients, setIngredients] = useState('');
     const [category, setCategory] = useState([]);
-    const [author, setAuthor] = useState('');
+    const [author, setAuthor] = useState(signinUsername);
     const [url, setUrl] = useState('');
     const [image, setImage] = useState(null);
     const [cookTime, setCookTime] = useState('');
@@ -17,6 +18,7 @@ const NewRecipe = () => {
     const [date, setDate] = useState('');
     const [prepTime, setPrepTime] = useState('');
     const [description, setDescription] = useState('');
+
 
 
     const [recipes, setRecipes] = useState([]);
@@ -69,7 +71,7 @@ const NewRecipe = () => {
                 setName('');
             })
             .catch((error) => {
-                alert('Error registering user');
+                alert('Error registering recipes');
                 console.log(error);
             });
     };
@@ -83,8 +85,9 @@ const NewRecipe = () => {
                 selectedCategories.push(options[i].value);
             }
         }
-        setCategory(selectedCategories);
+        setCategory(selectedCategories.join(", "));
     };
+
 
     const handleImageChange = (event) => {
         const imageFile = event.target.files[0];
@@ -163,15 +166,12 @@ const NewRecipe = () => {
                                 <option value="Lunch">Lunch</option>
                                 <option value="Dinner">Dinner</option>
                                 <option value="Dessert">Dessert</option>
+                                <option value="Meat">Meat</option>
+                                <option value="Vegan">Vegan</option>
+                                <option value="Vegetarian">Vegetarian</option>
+                                <option value="Fish">Fish</option>
+                                <option value="Seafood">Seafood</option>
                             </Form.Control>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Group>
-                            <Form.Label>Author:</Form.Label>
-                            <Form.Control type="text" value={author} onChange={(event) => setAuthor(event.target.value)} />
                         </Form.Group>
                     </Col>
                 </Row>

@@ -43,6 +43,11 @@ function Header(props) {
                         Add new recipe
                     </NavLink>
                     )}
+                    {signedIn && (
+                        <NavLink to="/Userpage" className="nav-link">
+                            Your recipes
+                        </NavLink>
+                    )}
                     {!signedIn && (
                             <NavLink to="/SignIn" className="nav-link">
                                 Sign In

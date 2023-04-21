@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const cors = require('cors');
 require('dotenv').config();
 const users = require("./userDetails.json");
+const recipesjson = require("./recipes.json");
 const fs = require("fs");
 
 const app = express();
@@ -14,10 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'olso',
-    password: 'olso',
+    user: 'root',
+    password: 'root',
     database: 'recipes',
-    port: 3307
+    //port: 3307
 });
 
 connection.connect((error) => {
@@ -61,6 +62,15 @@ app.post('/signin', (req, res) => {
 
 app.post('/NewRecipe', (req, res) => {
     const { name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
+    //tallennetaan myös json-fileen
+    recipesjson.push(req.body);
+    fs.writeFile('./recipes.json', JSON.stringify(recipesjson), (err) => {
+        if (err) {
+            console.log('Error writing to recipes-file:', err);
+        } else {
+            console.log('Recipe saved to json-file successfully!');
+        }
+    });
 
     const query = `INSERT INTO recipes (name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -74,6 +84,8 @@ app.post('/NewRecipe', (req, res) => {
         }
     });
 });
+
+
 
 // Start server
 const PORT = 3001;

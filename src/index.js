@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import SignIn from './SignIn';
+import Userpage from "./Userpage";
 import NewRecipe from './NewRecipe';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -15,6 +16,7 @@ root.render(
                 <Route path="/" element={<App />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/newrecipe" element={<NewRecipe />} />
+                <Route path="/userpage" element={<Userpage />} />
 
             </Routes>
         </BrowserRouter>

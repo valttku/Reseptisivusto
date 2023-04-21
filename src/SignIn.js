@@ -55,7 +55,7 @@ function SignIn() {
         // Reset form fields
         setSigninUsername('');
         setSigninPassword('');
-       // navigate('/');
+        navigate('/');
     };
 
     // Register form submit handler
