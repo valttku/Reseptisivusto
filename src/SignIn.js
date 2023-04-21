@@ -24,7 +24,7 @@ function SignIn() {
     const [signedIn, setSignedIn] = useState(localStorage.getItem("signedIn") ? localStorage.getItem("signedIn") === "true" : false);
     const navigate = useNavigate();
     const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-
+    const [confirmPassword,setConfirmPassword] = useState('');
     //console.log(`Kirjautuneena sisään as ${signinUsername}`);
 
     // Sign in form submit handler
@@ -67,6 +67,18 @@ function SignIn() {
             return user.username === registerUsername || user.email === registerEmail;
         });
 
+        const unmatchedPassword = () => {
+            return confirmPassword === registerPassword;
+
+        }
+
+        if (!unmatchedPassword()){
+            alert("Passwords do not match!");
+            return;
+        }
+
+
+
         // Show error if user already exists
         if (userExists) {
             alert('Username or email already in use');
@@ -97,6 +109,7 @@ function SignIn() {
                 setRegisterUsername('');
                 setRegisterEmail('');
                 setRegisterPassword('');
+                setConfirmPassword('');
             })
             .catch((error) => {
                 alert('Error registering user');
@@ -148,6 +161,7 @@ if(!showRegistrationForm){
             </Container>
         </Container>
     );} else{
+
     return(
         <Container fluid className="Signin px-0">
             <Header signedIn={signedIn} />
@@ -209,6 +223,15 @@ if(!showRegistrationForm){
                                     placeholder="Password"
                                     value={registerPassword}
                                     onChange={(event) => setRegisterPassword(event.target.value)}
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="confirmFormPassword">
+                                <Form.Label>Confirm password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Confirm password"
+                                    value={confirmPassword}
+                                    onChange={(event) => setConfirmPassword(event.target.value)}
                                 />
                             </Form.Group>
                             <Button variant="primary" type="submit" id="registerbutton">Submit</Button>
