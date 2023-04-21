@@ -1,5 +1,5 @@
 .navbar {
-    background-color: #f2f2e1;
+    background-color: #f2ece8;
     padding: 20px;
     margin-bottom: 30px;
 }
@@ -8,6 +8,7 @@
     font-size: 30px;
     font-weight: bold;
     color: black;
+    margin-left: 10px;
 }
 
 #navigate {
@@ -39,7 +40,7 @@
 }
 
 #navigate Form Button:hover {
-    background-color: grey;
+    background-color: #e2c9ba;
 }
 
 .nav-link {

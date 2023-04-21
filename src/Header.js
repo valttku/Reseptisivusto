@@ -33,8 +33,8 @@ function Header(props) {
 
     return (
 
-        <Navbar bg="light" expand="lg">
-            <Navbar.Brand id="topheading" href="/">My Recipe App</Navbar.Brand>
+        <Navbar expand="lg">
+            <Navbar.Brand id="topheading" href="http://localhost:3000/">My Recipe App</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <section id="navigate">

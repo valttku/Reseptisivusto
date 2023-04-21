@@ -10,7 +10,7 @@ function Body() {
     useEffect(() => {
         const getRandomRecipes = () => {
             const randomIndexes = new Set();
-            while (randomIndexes.size < 6) {
+            while (randomIndexes.size < 12) {
                 randomIndexes.add(Math.floor(Math.random() * recipeData.length));
             }
             const randomRecipes = Array.from(randomIndexes).map(
@@ -22,27 +22,34 @@ function Body() {
     }, []);
 
     const handleShowMoreRecipes = () => {
-        const randomIndexes = new Set([...Array(recipeData.length).keys()]);
-        const remainingIndexes = [...randomIndexes].filter(
-            (index) => !displayedRecipes.some((recipe) => recipe.id === index)
-        );
+        const remainingIndexes = Array.from(
+            { length: recipeData.length },
+            (_, index) => index
+        ).filter((index) => !displayedRecipes.some((recipe) => recipe.id === index));
+
         const randomIndexesToAdd = new Set();
-        while (randomIndexesToAdd.size < 6 && remainingIndexes.length > 0) {
+        while (
+            randomIndexesToAdd.size < 12 &&
+            remainingIndexes.length > 0 &&
+            randomIndexesToAdd.size < remainingIndexes.length
+            ) {
             const randomIndex =
                 remainingIndexes[Math.floor(Math.random() * remainingIndexes.length)];
             randomIndexesToAdd.add(randomIndex);
             remainingIndexes.splice(remainingIndexes.indexOf(randomIndex), 1);
         }
+
         const randomRecipesToAdd = Array.from(randomIndexesToAdd).map(
             (index) => recipeData[index]
         );
+
         setDisplayedRecipes((prevDisplayedRecipes) =>
             prevDisplayedRecipes.concat(randomRecipesToAdd)
         );
     };
 
     return (
-        <Container className="px-0">
+        <Container className="imageRow px-0">
             <Row>
                 <Col>
                     <div className="images">
@@ -60,6 +67,8 @@ function Body() {
                                 <p id="caption">{recipe.name}</p>
                             </div>
                         ))}
+                    </div>
+                    <div className="showMoreButton">
                         <button onClick={handleShowMoreRecipes} id="showMore">Show More</button>
                     </div>
                 </Col>
