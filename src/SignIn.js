@@ -17,14 +17,15 @@ function SignIn() {
     const [registerEmail, setRegisterEmail] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
     const [post, setPost]= React.useState(null);
+    const [signedIn, setSignedIn] = useState(false);
 
     // Sign in form submit handler
     const handleSigninSubmit = (event) => {
         event.preventDefault();
-
+        console.log(userDetails);
         // Find user by username and password
         const userExists = userDetails.find((user) => {
-            return user.userName === signinUsername && user.password === signinPassword;
+            return user.username === signinUsername && user.password === signinPassword;
         });
 
         // Show error if user not found
@@ -33,8 +34,10 @@ function SignIn() {
             return;
         }
 
+
         // Show welcome message if user found
         alert('Welcome ' + signinUsername);
+        setSignedIn(true);
 
         // Reset form fields
         setSigninUsername('');
@@ -86,10 +89,10 @@ function SignIn() {
                 console.log(error);
             });
     };
-
+if (!signedIn) {
     return (
         <Container fluid className="Signin px-0">
-            <Header />
+            <Header/>
             <Container className="Signinbody">
                 <Row>
                     <Col>
@@ -156,6 +159,21 @@ function SignIn() {
             </Container>
         </Container>
     );
+} else {
+    return (
+    <Container fluid className="Signin px-0">
+        <Header/>
+        <Container className="Signinbody">
+            <Row>
+                <Col>
+    <p>You {signinUsername} are signed In!</p>
+                </Col>
+            </Row>
+        </Container>
+    </Container>
+        );
 }
+        }
+
 
 export default SignIn;

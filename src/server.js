@@ -1,8 +1,9 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
-const users = require("./userDetails.json");
 require('dotenv').config();
+const users = require("./userDetails.json");
+const fs = require("fs");
 
 const app = express();
 
@@ -30,12 +31,19 @@ connection.connect((error) => {
 app.post('/signin', (req, res) => {
     const { username, email, password } = req.body;
     console.log("Tässä uusi käyttäjä: " + JSON.stringify(req.body));
-    const users = require("./userDetails.json");
     console.log("Tässä kaikki käyttäjät:");
     console.dir(users);
     users.push(req.body);
     console.log("Tässä kaikki käyttäjät uudelleen:");
     console.dir(users);
+
+    fs.writeFile('./userDetails.json', JSON.stringify(users), (err) => {
+        if (err) {
+            console.log('Error writing to file:', err);
+        } else {
+            console.log('User details saved to file successfully!');
+        }
+    });
 
     const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
     connection.query(query, [username, email, password], (error, results) => {
@@ -48,7 +56,7 @@ app.post('/signin', (req, res) => {
             res.status(200).json({ message: 'Authentication successful' });
         }
     });
-    res.send("OK");
+   // res.send("OK");
 });
 const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
 const values = ['user123', 'lol@gmail.com', 'password123'];
