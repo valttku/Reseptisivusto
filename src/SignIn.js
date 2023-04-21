@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import userDetails from './userDetails.json';
 import axios from 'axios';
@@ -9,19 +9,23 @@ import { useNavigate } from 'react-router-dom';
 
 
 
+
 function SignIn() {
     // Sign in form state
     const [signinUsername, setSigninUsername] = useState('');
     const [signinPassword, setSigninPassword] = useState('');
+
 
     // Register form state
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerEmail, setRegisterEmail] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
     const [post, setPost]= React.useState(null);
-    const [signedIn, setSignedIn] = useState(false);
+    const [signedIn, setSignedIn] = useState(localStorage.getItem("signedIn") ? localStorage.getItem("signedIn") === "true" : false);
     const navigate = useNavigate();
     const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+
+    //console.log(`Kirjautuneena sisään as ${signinUsername}`);
 
     // Sign in form submit handler
     const handleSigninSubmit = (event) => {
@@ -42,13 +46,16 @@ function SignIn() {
         alert('Welcome ' + signinUsername);
         setSignedIn(true);
 
+        localStorage.setItem("signedIn", JSON.stringify(true));
+        localStorage.setItem('signinUsername', signinUsername);
+
         // Redirect to homepage
 
 
         // Reset form fields
         setSigninUsername('');
         setSigninPassword('');
-        navigate('/');
+       // navigate('/');
     };
 
     // Register form submit handler
@@ -108,7 +115,7 @@ function SignIn() {
 if(!showRegistrationForm){
     return (
         <Container fluid className="Signin px-0">
-            <Header/>
+            <Header signedIn={signedIn} />
             <Container className="Signinbody">
                 <Row>
                     <Col>
@@ -143,7 +150,7 @@ if(!showRegistrationForm){
     );} else{
     return(
         <Container fluid className="Signin px-0">
-            <Header/>
+            <Header signedIn={signedIn} />
             <Container className="Signinbody">
                 <Row>
                     <Col>

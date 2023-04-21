@@ -5,9 +5,15 @@ import recipeData from './recipes.json';
 import { NavLink } from 'react-router-dom';
 import './navbar.css'
 
+
 function Header(props) {
+    const [signedIn, setSignedIn] = useState(localStorage.getItem("signedIn") ? localStorage.getItem("signedIn") === "true" : false);
+    const signinUsername = localStorage.getItem('signinUsername');
+    const userName = JSON.parse(localStorage.getItem("signedIn"));
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    console.log(signedIn);
+    console.log(signinUsername);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -19,19 +25,29 @@ function Header(props) {
         setSearchResults(filteredResults);
         props.setSearchResults(filteredResults);
     };
+    const handleSignout = () => {
+        localStorage.setItem('signinUsername', '');
+        setSignedIn(false);
+
+    }
 
     return (
+
         <Navbar bg="light" expand="lg">
-            <Navbar.Brand id="topheading" href="#home">My Recipe App</Navbar.Brand>
+            <Navbar.Brand id="topheading" href="/">My Recipe App</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <section id="navigate">
+                    {signedIn && (
                     <NavLink to="/NewRecipe" className="nav-link">
                         Add new recipe
                     </NavLink>
-                    <NavLink to="/SignIn" className="nav-link">
-                        Sign In
-                    </NavLink>
+                    )}
+                    {!signedIn && (
+                            <NavLink to="/SignIn" className="nav-link">
+                                Sign In
+                            </NavLink>
+                    )}
                     <Form inline onSubmit={handleSearch}>
                         <Form.Control
                             type="text"
@@ -43,6 +59,12 @@ function Header(props) {
                         <Button variant="outline-success" type="submit">
                             Search
                         </Button>
+                        {signedIn && (
+                        <Button variant="outline-success" type="Signout" onClick={handleSignout}>
+                            Logout
+                        </Button>
+                            )}
+
                     </Form>
                 </section>
             </Navbar.Collapse>
