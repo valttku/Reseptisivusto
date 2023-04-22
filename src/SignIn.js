@@ -76,7 +76,15 @@ function SignIn() {
             return;
         }
 
+        if (registerUsername.length < 4 ) {
+            alert('Username must have at least 4 characters.');
+            return;
+        }
 
+        if (registerPassword.length < 8 ) {
+            alert('Username must have at least 8 characters.');
+            return;
+        }
 
         // Show error if user already exists
         if (userExists) {
@@ -198,7 +206,7 @@ if(!showRegistrationForm){
                         <h1>Register</h1>
                         <Form method="post" onSubmit={handleRegisterSubmit} autocomplete="off">
                             <Form.Group controlId="formRegisterUsername">
-                                <Form.Label>Username</Form.Label>
+                                <Form.Label>Username (min 4 characters)</Form.Label>
                                 <Form.Control
                                     type="text"
                                     placeholder="Enter username"
@@ -216,7 +224,7 @@ if(!showRegistrationForm){
                                 />
                             </Form.Group>
                             <Form.Group controlId="formPassword">
-                                <Form.Label>Password</Form.Label>
+                                <Form.Label>Password (min. 8 characters)</Form.Label>
                                 <Form.Control
                                     type="password"
                                     placeholder="Password"
