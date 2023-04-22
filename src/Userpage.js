@@ -77,13 +77,13 @@ function Userpage() {
     });
 
     return (
-        <div>
+        <>
             <Header />
-            <div className="container">
-                <h1>Recipes</h1>
-                <div id="recipe-list">{recipeList}</div>
+            <div className="container mt-3">
+                <h2 className="mb-3">{signinUsername}'s Recipes</h2>
+                {recipeList}
             </div>
-        </div>
+        </>
     );
 }
 

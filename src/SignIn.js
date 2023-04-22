@@ -142,7 +142,7 @@ if(!showRegistrationForm){
                         <h1>Sign in</h1>
                         <Form onSubmit={handleSigninSubmit}>
                             <Form.Group controlId="formSigninUsername">
-                                <Form.Label>Username</Form.Label>
+                                <Form.Label>Username (min 4 characters)</Form.Label>
                                 <Form.Control
                                     type="text"
                                     placeholder="Enter username"
@@ -151,7 +151,7 @@ if(!showRegistrationForm){
                                 />
                             </Form.Group>
                             <Form.Group controlId="formSigninPassword">
-                                <Form.Label>Password</Form.Label>
+                                <Form.Label>Password (min. 8 characters)</Form.Label>
                                 <Form.Control
                                     type="password"
                                     placeholder="Password"
