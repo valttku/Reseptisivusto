@@ -7,9 +7,9 @@ import './navbar.css'
 
 
 function Header(props) {
-    const [signedIn, setSignedIn] = useState(localStorage.getItem("signedIn") ? localStorage.getItem("signedIn") === "true" : false);
-    const signinUsername = localStorage.getItem('signinUsername');
-    const userName = JSON.parse(localStorage.getItem("signedIn"));
+    const [signedIn, setSignedIn] = useState(sessionStorage.getItem("signedIn") ? sessionStorage.getItem("signedIn") === "true" : false);
+    const signinUsername = sessionStorage.getItem('signinUsername');
+    const userName = JSON.parse(sessionStorage.getItem("signedIn"));
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     console.log(signedIn);

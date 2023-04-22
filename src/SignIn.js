@@ -21,7 +21,7 @@ function SignIn() {
     const [registerEmail, setRegisterEmail] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
     const [post, setPost]= React.useState(null);
-    const [signedIn, setSignedIn] = useState(localStorage.getItem("signedIn") ? localStorage.getItem("signedIn") === "true" : false);
+    const [signedIn, setSignedIn] = useState(sessionStorage.getItem("signedIn") ? sessionStorage.getItem("signedIn") === "true" : false);
     const navigate = useNavigate();
     const [showRegistrationForm, setShowRegistrationForm] = useState(false);
     const [confirmPassword,setConfirmPassword] = useState('');
@@ -46,8 +46,8 @@ function SignIn() {
         alert('Welcome ' + signinUsername);
         setSignedIn(true);
 
-        localStorage.setItem("signedIn", JSON.stringify(true));
-        localStorage.setItem('signinUsername', signinUsername);
+        sessionStorage.setItem("signedIn", JSON.stringify(true));
+        sessionStorage.setItem('signinUsername', signinUsername);
 
         // Redirect to homepage
 

@@ -4,7 +4,7 @@ import Header from "./Header";
 import recipes from './recipes.json';
 
 function Userpage() {
-    const signinUsername = localStorage.getItem("signinUsername");
+    const signinUsername = sessionStorage.getItem("signinUsername");
     const [filteredRecipes, setFilteredRecipes] = useState([]);
 
     useEffect(() => {
