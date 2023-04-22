@@ -5,6 +5,7 @@ require('dotenv').config();
 const users = require("./userDetails.json");
 const recipesjson = require("./recipes.json");
 const fs = require("fs");
+const newRecipes = require("./newRecipes.json");
 
 const app = express();
 
@@ -15,10 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: 'root',
+    user: 'olso',
+    password: 'olso',
     database: 'recipes',
-    //port: 3307
+    port: 3307
 });
 
 connection.connect((error) => {
@@ -29,6 +30,9 @@ connection.connect((error) => {
     }
 
 });
+
+// Tallennetaan käyttäjätiedot tietokantaan JA userDetails jsoniin
+
 app.post('/signin', (req, res) => {
     const { username, email, password } = req.body;
     console.log("Tässä uusi käyttäjä: " + JSON.stringify(req.body));
@@ -60,6 +64,8 @@ app.post('/signin', (req, res) => {
    // res.send("OK");
 });
 
+// Tallennetaan recipes tietokantaan JA recipes jsoniin
+
 app.post('/NewRecipe', (req, res) => {
     const { name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
     //tallennetaan myös json-fileen
@@ -85,10 +91,73 @@ app.post('/NewRecipe', (req, res) => {
     });
 });
 
+// Saadan kaikki reseptit tietokannasta UUSI
 
+app.get('/recipes', (req, res) => {
+    const query = `SELECT * FROM recipes`;
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.log('Error querying database:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        } else {
+            console.log('Retrieved all recipes successfully!');
+            res.status(200).json(results);
+        }
+    });
+});
+
+// Saadan yhden tietyn reseptin tietokannasta nimen perusteella UUSI
+
+app.get('/recipes/:name', (req, res) => {
+    const recipeName = req.params.name;
+    const query = `SELECT * FROM recipes WHERE name = ?`;
+    connection.query(query, [recipeName], (error, results) => {
+        if (error) {
+            console.log('Error querying database:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        } else if (results.length === 0) {
+            res.status(404).json({ message: `Recipe with id ${recipeName} not found` });
+        } else {
+            res.status(200).json(results[0]);
+        }
+    });
+});
+
+// Päivitetään recipe nimen perusteella
+
+app.put('/recipes/:name', (req, res) => {
+    const { ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
+    const name = req.params.name;
+
+    const query = `UPDATE recipes SET ingredients=?, category=?, author=?, url=?, image=?, cookTime=?, recipeYield=?, date=?, prepTime=?, description=? WHERE name=?`;
+    connection.query(query, [ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description, name], (error, results) => {
+        if (error) {
+            console.log('Error querying database:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        } else {
+            console.log('Recipe updated successfully!');
+            res.status(200).json({ message: 'Recipe updated successfully!' });
+        }
+    });
+});
+
+// Poistetaan recipe nimen perusteella
+app.delete('/recipes/:name', (req, res) => {
+    const name = req.params.name;
+    const query = `DELETE FROM recipes WHERE name=?`;
+    connection.query(query, [name], (error, results) => {
+        if (error) {
+            console.log('Error querying database:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        } else {
+            console.log('Recipe deleted successfully!');
+            res.status(200).json({ message: 'Recipe deleted successfully!' });
+        }
+    });
+});
 
 // Start server
 const PORT = 3001;
 app.listen(PORT, () => {
-    console.log(`1Server started on port ${PORT}`);
+    console.log(`Server started on port ${PORT}`);
 });

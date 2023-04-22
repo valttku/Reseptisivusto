@@ -2,17 +2,34 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Header";
 import recipes from './recipes.json';
+import axios from 'axios';
 
 function Userpage() {
     const signinUsername = sessionStorage.getItem("signinUsername");
     const [filteredRecipes, setFilteredRecipes] = useState([]);
 
     useEffect(() => {
-        const filteredRecipes = recipes.filter(
-            (recipe) => recipe.author === signinUsername
-        );
-        setFilteredRecipes(filteredRecipes);
+        axios.get('http://localhost:3001/recipes')
+            .then((response) => {
+                const filteredRecipes = response.data.filter(
+                    (recipe) => recipe.author === signinUsername
+                );
+                setFilteredRecipes(filteredRecipes);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, [signinUsername]);
+
+    const deleteRecipe = (recipeName) => {
+        axios
+            .delete(`http://localhost:3001/recipes/${recipeName}`)
+            .then(() => {
+                const newRecipes = filteredRecipes.filter((recipe) => recipe.name !== recipeName);
+                setFilteredRecipes(newRecipes);
+            })
+            .catch((err) => console.log(err));
+    };
 
     const recipeList = filteredRecipes.map((recipe) => {
         return (
@@ -53,6 +70,7 @@ function Userpage() {
                             <strong>Description:</strong> {recipe.description}
                         </li>
                     </ul>
+                    <button onClick={() => deleteRecipe(recipe.name)}>Delete</button>
                 </div>
             </div>
         );

@@ -4,7 +4,6 @@ import userDetails from './userDetails.json';
 import axios from 'axios';
 import Header from "./Header";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import NewRecipe from "./NewRecipe";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -103,7 +102,7 @@ function SignIn() {
 
         //fetch('/signin', { method: form.method, body: formData });
         axios
-            .post('http://localhost:3001/signin', formData) //Tästä se errori tulee, POST url takia tulee selaimessa 404 errori eli ei löydä sitä.
+            .post('http://localhost:3001/signin', formData)
             .then((response) => {
                 setPost(response.data);
                 setRegisterUsername('');
