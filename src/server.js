@@ -139,7 +139,7 @@ app.put('/recipes/:name', (req, res) => {
             res.status(200).json({ message: 'Recipe updated successfully!' });
         }
     });
-});
+}); //.
 
 // Poistetaan recipe nimen perusteella
 app.delete('/recipes/:name', (req, res) => {
