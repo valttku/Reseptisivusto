@@ -74,7 +74,7 @@ function Header(props) {
                     <section className="loggedIn">
                         {signedIn && (
                             <>
-                                <b>{signinUsername}</b>
+                                Signed in as&nbsp;<b>{signinUsername}</b>
                                 <Button variant="outline-success" type="Signout" onClick={handleSignout} className="loggedInButton">
                                     Sign out
                                 </Button>

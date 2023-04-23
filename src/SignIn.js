@@ -135,7 +135,7 @@ function SignIn() {
 
     if (!showRegistrationForm) {
         return (
-            <Container fluid className="Signin px-0 signInContainer">
+            <Container fluid className="Signin px-0">
                 <Header signedIn={signedIn}/>
                 <Container className="Signinbody">
                     <Row>

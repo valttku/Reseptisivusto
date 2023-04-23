@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from "./Header";
 import Footer from "./Footer";
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipesData from './recipes.json'
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import {Container, Row, Col, Form, Button} from 'react-bootstrap';
+import './NewRecipe.css'
 
 const NewRecipe = () => {
     const signinUsername = sessionStorage.getItem('signinUsername');
@@ -50,7 +51,7 @@ const NewRecipe = () => {
         setRecipes([...recipes, recipe]);
 
         axios
-            .post('http://localhost:3001/NewRecipe', { ...recipe, id: recipe.id })
+            .post('http://localhost:3001/NewRecipe', {...recipe, id: recipe.id})
             .then((response) => {
                 setAuthor('');
                 setImage('');
@@ -80,6 +81,7 @@ const NewRecipe = () => {
         }
         setCategory(selectedCategories.join(", "));
     };
+
     const handleImageChange = (event) => {
         const imageFile = event.target.files[0];
         const formData = new FormData();
@@ -96,15 +98,16 @@ const NewRecipe = () => {
     return (
         <Container fluid className="Newrecipe px-0">
             <Header/>
-            <Container>
-                <h1 className="add">Add your own recipe below</h1>
+            <Container fluid className="newRecipeBody">
+                <h1 className="add">Add new recipe</h1>
                 <p className="add">Please fill out all sections of the form before you submit.</p>
                 <Form onSubmit={handleSubmit} className="formRecipe">
                     <Row>
                         <Col>
                             <Form.Group>
                                 <Form.Label>Name:</Form.Label>
-                                <Form.Control type="text" value={name} onChange={(event) => setName(event.target.value)} />
+                                <Form.Control type="text" value={name}
+                                              onChange={(event) => setName(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -112,7 +115,8 @@ const NewRecipe = () => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Ingredients (one per line):</Form.Label>
-                                <Form.Control as="textarea" rows={5} value={ingredients} onChange={(event) => setIngredients(event.target.value)} />
+                                <Form.Control as="textarea" className="textArea" rows={5} value={ingredients}
+                                              onChange={(event) => setIngredients(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -120,7 +124,7 @@ const NewRecipe = () => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Category:</Form.Label>
-                                <Form.Control as="select" multiple value={category} onChange={handleCategoryChange}>
+                                <Form.Control as="select" value={category} onChange={handleCategoryChange} id="categories">
                                     <option value="Breakfast">Breakfast</option>
                                     <option value="Lunch">Lunch</option>
                                     <option value="Dinner">Dinner</option>
@@ -138,7 +142,7 @@ const NewRecipe = () => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>URL:</Form.Label>
-                                <Form.Control type="text" value={url} onChange={(event) => setUrl(event.target.value)} />
+                                <Form.Control type="text" value={url} onChange={(event) => setUrl(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -146,35 +150,39 @@ const NewRecipe = () => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Image:</Form.Label>
-                                <Form.Control type="file" onChange={handleImageChange} />
+                                <Form.Control type="file" onChange={handleImageChange}/>
                             </Form.Group>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Cook Time (minutes):</Form.Label>
-                                <Form.Control type="number" value={cookTime} onChange={(event) => setCookTime(event.target.value)} />
+                                <Form.Label>Cook Time</Form.Label>
+                                <Form.Control type="number" min="0" value={cookTime} placeholder="minutes"
+                                              onChange={(event) => setCookTime(event.target.value)}/>
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group>
                                 <Form.Label>Recipe Yield:</Form.Label>
-                                <Form.Control type="number" value={recipeYield} onChange={(event) => setRecipeYield(event.target.value)} />
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>Date:</Form.Label>
-                                <Form.Control type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+                                <Form.Control type="number" min="0" value={recipeYield}
+                                              onChange={(event) => setRecipeYield(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Prep Time (minutes):</Form.Label>
-                                <Form.Control type="number" value={prepTime} onChange={(event) => setPrepTime(event.target.value)} />
+                                <Form.Label>Date:</Form.Label>
+                                <Form.Control type="date" value={date}
+                                              onChange={(event) => setDate(event.target.value)}/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group>
+                                <Form.Label>Prep Time</Form.Label>
+                                <Form.Control type="number" min="0" value={prepTime} placeholder="minutes"
+                                              onChange={(event) => setPrepTime(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -182,17 +190,19 @@ const NewRecipe = () => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Description:</Form.Label>
-                                <Form.Control as="textarea" rows={5} value={description} onChange={(event) => setDescription(event.target.value)} />
+                                <Form.Control as="textarea" className="textArea" rows={5} value={description}
+                                              onChange={(event) => setDescription(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
-                    <Button variant="primary" type="submit">Submit</Button>
-
+                    <div className="buttonDiv">
+                        <Button variant="primary" type="submit">Submit</Button>
+                    </div>
                 </Form>
             </Container>
-            <Footer />
+            <Footer/>
         </Container>
-
     );
 }
+
 export default NewRecipe;
