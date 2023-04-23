@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
+//Mongodb
 const uri = "mongodb+srv://recipeuser:recipepw@cluster0.6l2tzre.mongodb.net/recipes?retryWrites=true&w=majority";
 
 const client = new MongoClient(uri, {
@@ -63,6 +63,8 @@ async function run() {
 }
 
 run().catch(console.dir);
+//Mongodb tallennus loppuu tähän
+
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -126,7 +128,7 @@ const upload = multer({
         }
     }
 });
-//MONGODB TALLENNUS:
+
 
 
 /*LOCAL DB koodi
