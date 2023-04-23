@@ -5,6 +5,7 @@ require('dotenv').config();
 const users = require("./userDetails.json");
 const recipesjson = require("./recipes.json");
 const fs = require("fs");
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const newRecipes = require("./newRecipes.json");
 
 const app = express();
@@ -13,6 +14,55 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+const uri = "mongodb+srv://recipeuser:recipepw@cluster0.6l2tzre.mongodb.net/recipes?retryWrites=true&w=majority";
+
+const client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+async function run() {
+    try {
+        await client.connect();
+        console.log("Connected successfully to server");
+
+        const database = client.db("recipes");
+        const usersCollection = database.collection("users");
+
+        app.post('/signin', async (req, res) => {
+            try {
+                const { username, email, password } = req.body;
+                const user = { username, email, password };
+                const result = await usersCollection.insertOne(user);
+                console.log(`Inserted new user with id ${result.insertedId}`);
+                res.status(200).json({ message: 'Authentication successful' });
+            } catch (error) {
+                console.log('Error inserting new user into database:', error);
+                res.status(500).json({ message: 'Internal server error' });
+            }
+        });
+
+        process.on('SIGTERM', async () => {
+            console.log('Closing MongoDB client connection...');
+            await client.close();
+            console.log('MongoDB client connection closed.');
+            process.exit(0);
+        });
+
+        app.listen(process.env.PORT, () => {
+            console.log(`Server listening on port ${process.env.PORT}`);
+        });
+
+    } catch (error) {
+        console.log('Error connecting to MongoDB:', error);
+    }
+}
+
+run().catch(console.dir);
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -28,8 +78,24 @@ connection.connect((error) => {
     } else {
         console.log('Connected to database');
     }
-
 });
+//Lisää kaikki reseptit tietokantaan
+/*for (let i = 0; i < recipesjson.length; i++) {
+    const recipe = recipesjson[i];
+    const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = recipe;
+
+    const query = `INSERT INTO recipes (id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    connection.query(query, [id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description], (error, results) => {
+        if (error) {
+            console.log('Error querying database:', error);
+        } else {
+            console.log('Recipe added to database:', recipe.name);
+        }
+    });
+}*/
+
 
 /* LISÄÄ JSON FILEEN ID
 ecipesjson.forEach((recipe, index) => {
@@ -60,7 +126,10 @@ const upload = multer({
         }
     }
 });
+//MONGODB TALLENNUS:
 
+
+/*LOCAL DB koodi
 app.post('/upload', upload.single('image'), (req, res) => {
     console.log(req.file);
     res.json({ filename: req.file.filename });
@@ -97,7 +166,7 @@ app.post('/signin', (req, res) => {
         }
     });
     // res.send("OK");
-});
+});*/
 
 // Tallennetaan recipes tietokantaan JA recipes jsoniin
 
