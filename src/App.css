@@ -60,6 +60,7 @@ body {
   border-color: black;
   color: black;
   align-content: center;
+  padding: 5px;
 }
 
 .showMoreButton #showMore:hover {

@@ -5,6 +5,7 @@ import recipeData from './recipes.json';
 import placeholderImage from './placeholder-image.jpg';
 
 function Body() {
+
     const [displayedRecipes, setDisplayedRecipes] = useState([]);
 
     useEffect(() => {

@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import Header from './Header.js';
 import Body from './Body.js';
-import Results from './Results.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import './App.css'
 
 function App() {
@@ -14,10 +12,9 @@ function App() {
     };
 
     return (
-        <div id ="Home">
+        <div id="Home">
             <Header setSearchResults={handleSearchResults} />
             <Body />
-            {searchResults.length > 0 && <Results searchResults={searchResults} />}
         </div>
     );
 }
