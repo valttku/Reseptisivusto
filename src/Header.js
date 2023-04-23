@@ -5,7 +5,6 @@ import recipeData from './recipes.json';
 import { NavLink } from 'react-router-dom';
 import './navbar.css'
 
-
 function Header(props) {
     const [signedIn, setSignedIn] = useState(sessionStorage.getItem("signedIn") ? sessionStorage.getItem("signedIn") === "true" : false);
     const signinUsername = sessionStorage.getItem('signinUsername');
@@ -25,53 +24,62 @@ function Header(props) {
         setSearchResults(filteredResults);
         props.setSearchResults(filteredResults);
     };
+
     const handleSignout = () => {
         localStorage.setItem('signinUsername', '');
         setSignedIn(false);
-
     }
 
     return (
-
         <Navbar expand="lg">
             <Navbar.Brand id="topheading" href="http://localhost:3000/">My Recipe App</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <section id="navigate">
-                    {signedIn && (
-                    <NavLink to="/NewRecipe" className="nav-link">
-                        Add new recipe
-                    </NavLink>
-                    )}
-                    {signedIn && (
-                        <NavLink to="/Userpage" className="nav-link">
-                            Your recipes
-                        </NavLink>
-                    )}
-                    {!signedIn && (
-                            <NavLink to="/SignIn" className="nav-link">
-                                Sign In
-                            </NavLink>
-                    )}
-                    <Form inline onSubmit={handleSearch}>
-                        <Form.Control
-                            type="text"
-                            placeholder="Find a recipe"
-                            className="mr-sm-2 userInput"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <Button variant="outline-success" type="submit">
-                            Search
-                        </Button>
-                        {signedIn && (
-                        <Button variant="outline-success" type="Signout" onClick={handleSignout}>
-                            Logout
-                        </Button>
+                <div className="nav-container">
+                    <section id="navigate">
+                        <div id="navLinks">
+                            {signedIn && (
+                                <>
+                                    <NavLink to="/NewRecipe" className="nav-link">
+                                        Add new recipe
+                                    </NavLink>
+                                    <NavLink to="/Userpage" className="nav-link">
+                                        Your recipes
+                                    </NavLink>
+                                </>
                             )}
-
-                    </Form>
-                </section>
+                            {!signedIn && (
+                                <NavLink to="/SignIn" className="nav-link">
+                                    Sign In
+                                </NavLink>
+                            )}
+                        </div>
+                        <div>
+                            <Form inline onSubmit={handleSearch}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Find a recipe"
+                                    className="mr-sm-2 userInput"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                                <Button variant="outline-success" type="submit">
+                                    Search
+                                </Button>
+                            </Form>
+                        </div>
+                    </section>
+                    <section className="loggedIn">
+                        {signedIn && (
+                            <>
+                                <b>{signinUsername}</b>
+                                <Button variant="outline-success" type="Signout" onClick={handleSignout}>
+                                    Logout
+                                </Button>
+                            </>
+                        )}
+                    </section>
+                </div>
             </Navbar.Collapse>
         </Navbar>
     );

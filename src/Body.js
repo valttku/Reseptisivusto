@@ -56,7 +56,7 @@ function Body() {
                         {displayedRecipes.map((recipe) => (
                             <div className="imageHolder">
                                 <Image
-                                    src={recipe.image}
+                                    src={recipe.image || placeholderImage}
                                     alt={recipe.name}
                                     onError={(e) => {
                                         e.target.src = placeholderImage;
