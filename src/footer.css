@@ -1,0 +1,22 @@
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #efe7e2;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+
+footer p {
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 100px;
+}

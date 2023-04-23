@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from "./Header";
+import Footer from "./Footer";
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipes from './recipes.json'
@@ -199,6 +200,7 @@ const NewRecipe = () => {
 
                 </Form>
             </Container>
+            <Footer />
         </Container>
 
     );

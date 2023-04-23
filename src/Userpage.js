@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Header";
+import Footer from "./Footer";
 import recipes from './recipes.json';
 import axios from 'axios';
-
-
 
 function Userpage() {
     const signinUsername = sessionStorage.getItem("signinUsername");
@@ -87,6 +86,7 @@ function Userpage() {
                 <h2 className="mb-3">{signinUsername}'s Recipes</h2>
                 {recipeList}
             </div>
+            <Footer />
         </>
     );
 }

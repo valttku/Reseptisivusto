@@ -3,6 +3,7 @@ import {Container, Row, Col, Form, Button} from 'react-bootstrap';
 import userDetails from './userDetails.json';
 import axios from 'axios';
 import Header from "./Header";
+import Footer from "./Footer"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useNavigate} from 'react-router-dom';
 import './signIn.css'
@@ -168,6 +169,7 @@ function SignIn() {
                         </Col>
                     </Row>
                 </Container>
+                <Footer />
             </Container>
         );
     } else {
@@ -248,8 +250,9 @@ function SignIn() {
                         </Col>
                     </Row>
                 </Container>
+                <Footer />
             </Container>
-        )
+        );
     }
 }
 
