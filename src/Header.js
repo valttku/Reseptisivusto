@@ -46,7 +46,7 @@ function Header(props) {
                                         Add new recipe
                                     </NavLink>
                                     <NavLink to="/Userpage" className="nav-link">
-                                        Your recipes
+                                        My recipes
                                     </NavLink>
                                 </>
                             )}

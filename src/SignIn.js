@@ -160,11 +160,14 @@ function SignIn() {
                                         onChange={(event) => setSigninPassword(event.target.value)}
                                     />
                                 </Form.Group>
-                                <Button variant="primary" type="submit" className="button" id="signinbutton">
-                                    Sign in
-                                </Button>
-                                <Button variant="secondary" type="button" id="openregistration"
-                                        onClick={handleRegistrationClick}>Open registration</Button>
+                                <div className="buttons">
+                                    <Button variant="primary" type="submit" className="button" id="signinbutton">
+                                        Sign in
+                                    </Button>
+                                    <Button variant="secondary" type="button" id="openregistration"
+                                            onClick={handleRegistrationClick}>Open registration
+                                    </Button>
+                                </div>
                             </Form>
                         </Col>
                     </Row>
@@ -199,9 +202,12 @@ function SignIn() {
                                         onChange={(event) => setSigninPassword(event.target.value)}
                                     />
                                 </Form.Group>
-                                <Button variant="primary" type="submit" id="signinbutton">Sign in</Button>
-                                <Button variant="secondary" type="button" id="openregistration"
-                                        onClick={handleRegistrationClick}>Open registration</Button>
+                                <div className="buttons">
+                                    <Button variant="primary" type="submit" id="signinbutton">Sign in</Button>
+                                    <Button variant="secondary" type="button" id="openregistration"
+                                            onClick={handleRegistrationClick}>Open registration
+                                    </Button>
+                                </div>
                             </Form>
                         </Col>
                     </Row>
@@ -245,7 +251,9 @@ function SignIn() {
                                         onChange={(event) => setConfirmPassword(event.target.value)}
                                     />
                                 </Form.Group>
-                                <Button variant="primary" type="submit" id="registerbutton">Submit</Button>
+                                <div className="buttons">
+                                    <Button variant="primary" type="submit" id="registerbutton">Submit</Button>
+                                </div>
                             </Form>
                         </Col>
                     </Row>

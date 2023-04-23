@@ -33,8 +33,8 @@
     color: black;
     padding: 5px;
     min-width: 80px;
-    margin-top: 15px;
-    margin-bottom: 25px;
+    margin-top: 20px;
+    margin-bottom: 30px;
     margin-right: 15px;
 }
 
@@ -58,4 +58,9 @@
 
 .Signinbody p {
     font-size: 1.3rem;
+}
+
+.Signinbody .buttons {
+    display: flex;
+    justify-content: center;
 }
