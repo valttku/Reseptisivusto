@@ -34,7 +34,7 @@ function Header(props) {
 
     return (
         <Navbar expand="lg">
-            <Navbar.Brand id="topheading" href="http://localhost:3000/">My Recipe App</Navbar.Brand>
+            <Navbar.Brand id="topheading" href="/">My Recipe App</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <div className="nav-container">
@@ -75,8 +75,8 @@ function Header(props) {
                         {signedIn && (
                             <>
                                 <b>{signinUsername}</b>
-                                <Button variant="outline-success" type="Signout" onClick={handleSignout}>
-                                    Logout
+                                <Button variant="outline-success" type="Signout" onClick={handleSignout} className="loggedInButton">
+                                    Sign out
                                 </Button>
                             </>
                         )}

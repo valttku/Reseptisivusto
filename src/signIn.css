@@ -1,0 +1,61 @@
+.Signinbody {
+    margin: auto;
+    max-width: 500px;
+    padding-right: 50px;
+    padding-left: 50px;
+}
+
+.Signinbody label {
+    font-size: 1.4rem;
+    margin-top: 10px;
+}
+
+.Signinbody h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.Signinbody input[type="text"], input[type="password"], input[type="email"] {
+    border-radius: 12px;
+    border-width: 2px;
+    background-color: white;
+    border-color: black;
+    color: black;
+    min-width: 150px;
+    padding: 5px;
+}
+
+.Signinbody button {
+    border-radius: 12px;
+    border-width: 2px;
+    background-color: white;
+    border-color: black;
+    color: black;
+    padding: 5px;
+    min-width: 80px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    margin-right: 15px;
+}
+
+.Signinbody button:hover {
+    background-color: #e2c9ba;
+    color: black;
+    border-color: black;
+}
+
+.Signinbody button.active {
+    background-color: #efe7e2;
+    color: black;
+    border-color: black;
+}
+
+.Signinbody button.active:hover {
+    background-color: #e2c9ba;
+    color: black;
+    border-color: black;
+}
+
+.Signinbody p {
+    font-size: 1.3rem;
+}

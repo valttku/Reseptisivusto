@@ -61,6 +61,7 @@ body {
   color: black;
   align-content: center;
   padding: 5px;
+  min-width: 100px;
 }
 
 .showMoreButton #showMore:hover {
