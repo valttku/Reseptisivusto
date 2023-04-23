@@ -31,6 +31,11 @@ connection.connect((error) => {
 
 });
 
+/* LISÄÄ JSON FILEEN ID
+ecipesjson.forEach((recipe, index) => {
+    recipe.id = index + 1; // add unique ID based on index
+});*/
+
 //TUULI
 const multer = require('multer');
 const path = require('path');
@@ -97,7 +102,7 @@ app.post('/signin', (req, res) => {
 // Tallennetaan recipes tietokantaan JA recipes jsoniin
 
 app.post('/NewRecipe', (req, res) => {
-    const { name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
+    const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
     //tallennetaan myös json-fileen
     recipesjson.push(req.body);
     fs.writeFile('./recipes.json', JSON.stringify(recipesjson), (err) => {
@@ -108,9 +113,9 @@ app.post('/NewRecipe', (req, res) => {
         }
     });
 
-    const query = `INSERT INTO recipes (name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    connection.query(query, [name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description], (error, results) => {
+    const query = `INSERT INTO recipes (id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(query, [id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description], (error, results) => {
         if (error) {
             console.log('Error querying database:', error);
             res.status(500).json({ message: 'Internal server error' });
@@ -156,11 +161,11 @@ app.get('/recipes/:name', (req, res) => {
 // Päivitetään recipe nimen perusteella
 
 app.put('/recipes/:name', (req, res) => {
-    const { ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
+    const { id, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
     const name = req.params.name;
 
     const query = `UPDATE recipes SET ingredients=?, category=?, author=?, url=?, image=?, cookTime=?, recipeYield=?, date=?, prepTime=?, description=? WHERE name=?`;
-    connection.query(query, [ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description, name], (error, results) => {
+    connection.query(query, [id, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description, name], (error, results) => {
         if (error) {
             console.log('Error querying database:', error);
             res.status(500).json({ message: 'Internal server error' });

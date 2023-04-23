@@ -3,7 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import recipes from './recipes.json'
+import recipesData from './recipes.json'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
 const NewRecipe = () => {
@@ -23,15 +23,14 @@ const NewRecipe = () => {
     const [recipes, setRecipes] = useState([]);
 
     useEffect(() => {
-        fetch('./recipes.json')
-            .then(response => response.json())
-            .then(data => setRecipes(data.recipes))
-            .catch(error => console.error('Error fetching recipes:', error));
+        setRecipes(recipesData);
     }, []);
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        const maxId = Math.max(...recipes.map(recipe => recipe.id), 0);
         const recipe = {
+            id: maxId + 1,
             name,
             ingredients: ingredients.replace(/,\s+/g, '\n'),
             category,
@@ -46,16 +45,12 @@ const NewRecipe = () => {
         };
         //Testing
         console.log("Tässä uusi resepti: " + JSON.stringify(recipe));
-        const recipes = require("./recipes.json");
         console.log("Tässä kaikki reseptit:");
         console.dir(recipes);
-        recipes.push(recipe);
-        console.log("Tässä kaikki reseptit uudelleen:");
-        console.dir(recipes);
-
+        setRecipes([...recipes, recipe]);
 
         axios
-            .post('http://localhost:3001/NewRecipe', recipe)
+            .post('http://localhost:3001/NewRecipe', { ...recipe, id: recipe.id })
             .then((response) => {
                 setAuthor('');
                 setImage('');
@@ -75,7 +70,6 @@ const NewRecipe = () => {
             });
     };
 
-
     const handleCategoryChange = (event) => {
         const options = event.target.options;
         const selectedCategories = [];
@@ -91,17 +85,13 @@ const NewRecipe = () => {
         const formData = new FormData();
         formData.append('image', imageFile);
         axios.post('http://localhost:3001/upload', formData)
-            .then(response => {
-                console.log('Image uploaded successfully:', response.data);
-                setImage(response.data.filename);
+            .then((response) => {
+                setImage(response.data.url);
             })
-            .catch(error => {
-                console.error('Error uploading image:', error);
+            .catch((error) => {
+                console.log(error);
             });
     };
-
-
-//lisättävä server.js:ään koodia kuvan poimimista varten
 
     return (
         <Container fluid className="Newrecipe px-0">
