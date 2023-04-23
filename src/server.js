@@ -16,10 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'olso',
-    password: 'olso',
+    user: 'root',
+    password: 'root',
     database: 'recipes',
-    port: 3307
+    //port: 3307
 });
 
 connection.connect((error) => {
@@ -29,6 +29,36 @@ connection.connect((error) => {
         console.log('Connected to database');
     }
 
+});
+
+//TUULI
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: './img',
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    fileFilter: function(req, file, cb) {
+        const filetypes = /jpeg|jpg|png/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+        if (extname && mimetype) {
+            return cb(null, true);
+        } else {
+            cb('Error: Images only!');
+        }
+    }
+});
+
+app.post('/upload', upload.single('image'), (req, res) => {
+    console.log(req.file);
+    res.json({ filename: req.file.filename });
 });
 
 // Tallennetaan käyttäjätiedot tietokantaan JA userDetails jsoniin
@@ -61,7 +91,7 @@ app.post('/signin', (req, res) => {
             res.status(200).json({ message: 'Authentication successful' });
         }
     });
-   // res.send("OK");
+    // res.send("OK");
 });
 
 // Tallennetaan recipes tietokantaan JA recipes jsoniin

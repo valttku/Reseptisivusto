@@ -4,6 +4,8 @@ import Header from "./Header";
 import recipes from './recipes.json';
 import axios from 'axios';
 
+
+
 function Userpage() {
     const signinUsername = sessionStorage.getItem("signinUsername");
     const [filteredRecipes, setFilteredRecipes] = useState([]);
@@ -38,9 +40,11 @@ function Userpage() {
                 <div className="card-body">
                     <img
                         src={recipe.image}
+                        //src="./img/1682242071778.png"
                         className="img-fluid mx-auto d-block my-3"
                         alt="Recipe image"
                     />
+
                     <ul>
                         <li>
                             <strong>Ingredients:</strong> {recipe.ingredients}

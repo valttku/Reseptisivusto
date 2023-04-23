@@ -28,6 +28,8 @@ function Header(props) {
     const handleSignout = () => {
         localStorage.setItem('signinUsername', '');
         setSignedIn(false);
+        sessionStorage.removeItem('signedIn');
+        sessionStorage.removeItem('signinUsername');
     }
 
     return (

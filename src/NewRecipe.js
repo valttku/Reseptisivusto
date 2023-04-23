@@ -85,53 +85,21 @@ const NewRecipe = () => {
         }
         setCategory(selectedCategories.join(", "));
     };
-
-
     const handleImageChange = (event) => {
         const imageFile = event.target.files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(imageFile);
-        reader.onload = () => {
-            const imageDataUrl = reader.result;
-            const imageName = imageFile.name;
-            const imageType = imageFile.type.split('/')[1];
-            const imageSrc = `/img/${imageName}.${imageType}`;
-            const imageBlob = dataURLtoBlob(imageDataUrl);
-            saveImage(imageBlob, imageSrc);
-            setImage(imageSrc);
-        };
-    };
-
-    const dataURLtoBlob = (dataURL) => {
-        const parts = dataURL.split(',');
-        const mimeType = parts[0].match(/:(.*?);/)[1];
-        const b64 = atob(parts[1]);
-        let n = b64.length;
-        const u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = b64.charCodeAt(n);
-        }
-        return new Blob([u8arr], { type: mimeType });
-    };
-
-    const saveImage = (blob, fileName) => {
         const formData = new FormData();
-        formData.append('image', blob, fileName);
-
-        fetch('/save-image', {
-            method: 'POST',
-            body: formData
-        })
+        formData.append('image', imageFile);
+        axios.post('http://localhost:3001/upload', formData)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to save image');
-                }
-                console.log('Image saved successfully!');
+                console.log('Image uploaded successfully:', response.data);
+                setImage(response.data.filename);
             })
             .catch(error => {
-                console.error('Error saving image:', error);
+                console.error('Error uploading image:', error);
             });
     };
+
+
 //lisättävä server.js:ään koodia kuvan poimimista varten
 
     return (
