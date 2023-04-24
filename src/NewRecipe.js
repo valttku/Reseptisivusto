@@ -146,14 +146,14 @@ const NewRecipe = () => {
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Cook Time</Form.Label>
+                                <Form.Label>Cook Time:</Form.Label>
                                 <Form.Control type="number" min="0" value={cookTime} placeholder="minutes"
                                               onChange={(event) => setCookTime(event.target.value)}/>
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Prep Time</Form.Label>
+                                <Form.Label>Prep Time:</Form.Label>
                                 <Form.Control type="number" min="0" value={prepTime} placeholder="minutes"
                                               onChange={(event) => setPrepTime(event.target.value)}/>
                             </Form.Group>
@@ -196,8 +196,7 @@ const NewRecipe = () => {
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Image:</Form.Label>
-                                <div>
+                                <div id="radioButtons">
                                     <Form.Check
                                         type="radio"
                                         id="uploadImage"

@@ -61,5 +61,20 @@
     justify-content: center;
 }
 
+.newRecipeBody #radioButtons {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.newRecipeBody #radioButtons label {
+    display: block;
+    margin-left: 5px;
+}
+
+.newRecipeBody #radioButtons .form-check-input:checked {
+    background-color: #e2c9ba;
+    border-color: black;
+    border-width: 2px;
+}
 
 

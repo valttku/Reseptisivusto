@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
-import placeholderImage from './placeholder-image.jpg';
-import RecipePage from "./RecipePage";
+import placeholderImage from './img/placeholder-image.jpg';
 import { useNavigate } from 'react-router-dom';
 function Body() {
     const navigate = useNavigate();
