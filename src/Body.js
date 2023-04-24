@@ -3,8 +3,10 @@ import { Container, Row, Col, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipeData from './recipes.json';
 import placeholderImage from './placeholder-image.jpg';
-
+import RecipePage from "./RecipePage";
+import { useNavigate } from 'react-router-dom';
 function Body() {
+    const navigate = useNavigate();
 
     const [displayedRecipes, setDisplayedRecipes] = useState([]);
 
@@ -49,13 +51,17 @@ function Body() {
         );
     };
 
+    const handleRecipeClick = (recipe) => {
+        navigate(`/recipe/${recipe.id}`);
+    };
+
     return (
         <Container className="imageRow px-0">
             <Row>
                 <Col>
                     <div className="images">
                         {displayedRecipes.map((recipe) => (
-                            <div className="imageHolder">
+                            <div className="imageHolder" key={recipe.id} onClick={() => handleRecipeClick(recipe)}>
                                 <Image
                                     src={recipe.image || placeholderImage}
                                     alt={recipe.name}

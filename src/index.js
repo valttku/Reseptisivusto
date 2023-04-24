@@ -5,8 +5,11 @@ import App from './App';
 import SignIn from './SignIn';
 import Userpage from "./Userpage";
 import NewRecipe from './NewRecipe';
+import RecipePage from './RecipePage';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Body from "./Body";
+import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,10 +20,11 @@ root.render(
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/newrecipe" element={<NewRecipe />} />
                 <Route path="/userpage" element={<Userpage />} />
-
+                <Route path="/" element={<Body />} />
+                <Route path="/recipe/:id" element={<RecipePage />} />
             </Routes>
         </BrowserRouter>
-    </React.StrictMode>
+    </React.StrictMode>,
 );
 
 reportWebVitals();
