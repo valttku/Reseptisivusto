@@ -25,6 +25,8 @@ const NewRecipe = () => {
 
     useEffect(() => {
         setRecipes(recipesData);
+        const currentDate = new Date().toISOString().slice(0, 10);
+        setDate(currentDate);
     }, []);
 
     const handleSubmit = (event) => {
@@ -37,7 +39,7 @@ const NewRecipe = () => {
             category,
             author,
             url,
-            image,
+            image: image || '', // set image to empty string if it's null or undefined
             cookTime,
             recipeYield,
             date,
@@ -171,13 +173,6 @@ const NewRecipe = () => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>Date:</Form.Label>
-                                <Form.Control type="date" value={date}
-                                              onChange={(event) => setDate(event.target.value)}/>
-                            </Form.Group>
-                        </Col>
                         <Col>
                             <Form.Group>
                                 <Form.Label>Prep Time</Form.Label>

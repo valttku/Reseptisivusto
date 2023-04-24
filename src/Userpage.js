@@ -64,7 +64,7 @@ function Userpage() {
                             <strong>Recipe yield:</strong> {recipe.recipeYield}
                         </li>
                         <li>
-                            <strong>Date published:</strong> {recipe.datePublished}
+                            <strong>Date published:</strong> {recipe.date}
                         </li>
                         <li>
                             <strong>Prep time:</strong> {recipe.prepTime}
