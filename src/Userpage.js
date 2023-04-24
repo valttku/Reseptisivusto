@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "./Header";
 import Footer from "./Footer";
-import recipes from './recipes.json';
 import axios from 'axios';
 
 function Userpage() {
     const signinUsername = sessionStorage.getItem("signinUsername");
     const [filteredRecipes, setFilteredRecipes] = useState([]);
+    const [selectedRecipe, setSelectedRecipe] = useState(null);
+    const [showPopup, setShowPopup] = useState(false);
 //.
     useEffect(() => {
         axios.get('http://localhost:3001/recipes')
@@ -32,6 +33,11 @@ function Userpage() {
             .catch((err) => console.log(err));
     };
 
+    const editRecipe = (recipe) => {
+        setSelectedRecipe(recipe);
+        setShowPopup(true);
+    };
+
     const recipeList = filteredRecipes.map((recipe) => {
         return (
             <div className="card my-3" key={recipe.name}>
@@ -39,11 +45,9 @@ function Userpage() {
                 <div className="card-body">
                     <img
                         src={recipe.image}
-                        //src="./img/1682242071778.png"
                         className="img-fluid mx-auto d-block my-3"
                         alt="Recipe image"
                     />
-
                     <ul>
                         <li>
                             <strong>Ingredients:</strong> {recipe.ingredients}
@@ -74,6 +78,7 @@ function Userpage() {
                         </li>
                     </ul>
                     <button onClick={() => deleteRecipe(recipe.name)}>Delete</button>
+                    <button onClick={() => editRecipe(recipe)}>Edit</button>
                 </div>
             </div>
         );
@@ -81,12 +86,62 @@ function Userpage() {
 
     return (
         <>
-            <Header />
+            <Header/>
             <div className="container mt-3">
                 <h2 className="mb-3">{signinUsername}'s Recipes</h2>
                 {recipeList}
+                {showPopup && (
+                    <div className="popup">
+                        <div className="popup-inner">
+                            <h2>Edit recipe name</h2>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    axios
+                                        .put(`http://localhost:3001/recipes/${selectedRecipe.name}`, selectedRecipe)
+                                        .then((response) => {
+                                            console.log('Response:', response.data);
+                                            const updatedRecipe = response.data;
+                                            const updatedRecipes = filteredRecipes.map((recipe) => {
+                                                if (recipe.name === updatedRecipe.name) {
+                                                    return updatedRecipe;
+                                                } else {
+                                                    return recipe;
+                                                }
+                                            });
+                                            setFilteredRecipes(updatedRecipes);
+                                            setShowPopup(false);
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error:', error);
+                                            setShowPopup(false);
+                                        });
+                                }}
+                            >
+                                <label htmlFor="name">Recipe name:</label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value={selectedRecipe.name}
+                                    onChange={(e) =>
+                                        setSelectedRecipe({
+                                            ...selectedRecipe,
+                                            name: e.target.value,
+                                        })
+                                    }
+                                />
+
+                                <button type="submit">Save Changes</button>
+                                <button type="button" onClick={() => setShowPopup(false)}>
+                                    Cancel
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </div>
-            <Footer />
+            <Footer/>
         </>
     );
 }

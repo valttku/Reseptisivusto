@@ -5,7 +5,6 @@ require('dotenv').config();
 const users = require("./userDetails.json");
 const recipesjson = require("./recipes.json");
 const fs = require("fs");
-const newRecipes = require("./newRecipes.json");
 
 const app = express();
 
@@ -16,10 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: 'root',
+    user: 'olso',
+    password: 'olso',
     database: 'recipes',
-    //port: 3307
+    port: 3307
 });
 
 connection.connect((error) => {
@@ -150,7 +149,7 @@ app.get('/recipes', (req, res) => {
     });
 });
 
-// Saadan yhden tietyn reseptin tietokannasta nimen perusteella UUSI
+// Saadan yhden tietyn reseptin tietokannasta nimen perusteella UUSI JA EI KÄYTÖSSÄ
 
 app.get('/recipes/:name', (req, res) => {
     const recipeName = req.params.name;
@@ -170,20 +169,22 @@ app.get('/recipes/:name', (req, res) => {
 // Päivitetään recipe nimen perusteella
 
 app.put('/recipes/:name', (req, res) => {
-    const { id, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
-    const name = req.params.name;
+    const { id } = req.params;
+    const { name} = req.body;
 
-    const query = `UPDATE recipes SET ingredients=?, category=?, author=?, url=?, image=?, cookTime=?, recipeYield=?, date=?, prepTime=?, description=? WHERE name=?`;
-    connection.query(query, [id, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description, name], (error, results) => {
+    const query = `UPDATE recipes 
+                 SET name = ?`;
+
+    connection.query(query, [name,id], (error, results) => {
         if (error) {
-            console.log('Error querying database:', error);
+            console.log('Error updating recipe:', error);
             res.status(500).json({ message: 'Internal server error' });
         } else {
             console.log('Recipe updated successfully!');
             res.status(200).json({ message: 'Recipe updated successfully!' });
         }
     });
-}); //.
+});
 
 // Poistetaan recipe nimen perusteella
 app.delete('/recipes/:name', (req, res) => {
