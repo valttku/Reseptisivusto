@@ -31,11 +31,20 @@ connection.connect((error) => {
 
 });
 
-/* LISÄÄ JSON FILEEN ID
-ecipesjson.forEach((recipe, index) => {
-    recipe.id = index + 1; // add unique ID based on index
-});*/
-
+//Lisää kaikki reseptit omaan tietokantaan:
+/*for (let i = 0; i < recipesjson.length; i++) {
+    const recipe = recipesjson[i];
+    const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = recipe;
+    const query = `INSERT INTO recipes (id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(query, [id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description], (error, results) => {
+        if (error) {
+            console.log('Error querying database:', error);
+        } else {
+            console.log('Recipe added to database:', recipe.name);
+        }
+    });
+}*/
 //TUULI
 const multer = require('multer');
 const path = require('path');

@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "./Header";
 import Footer from "./Footer";
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import recipesData from './recipes.json'
-import {Container, Row, Col, Form, Button} from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './NewRecipe.css'
 
 const NewRecipe = () => {
@@ -20,8 +20,11 @@ const NewRecipe = () => {
     const [date, setDate] = useState('');
     const [prepTime, setPrepTime] = useState('');
     const [description, setDescription] = useState('');
+    const [selectedOption, setSelectedOption] = useState("");
 
     const [recipes, setRecipes] = useState([]);
+
+
 
     useEffect(() => {
         setRecipes(recipesData);
@@ -40,10 +43,10 @@ const NewRecipe = () => {
             author,
             url,
             image: image || '', // set image to empty string if it's null or undefined
-            cookTime,
-            recipeYield,
+            cookTime: cookTime + " minutes",
+            recipeYield: "Serves " + recipeYield + ".",
             date,
-            prepTime,
+            prepTime: prepTime + " minutes",
             description,
         };
         //Testing
@@ -53,7 +56,7 @@ const NewRecipe = () => {
         setRecipes([...recipes, recipe]);
 
         axios
-            .post('http://localhost:3001/NewRecipe', {...recipe, id: recipe.id})
+            .post('http://localhost:3001/NewRecipe', { ...recipe, id: recipe.id })
             .then((response) => {
                 setAuthor('');
                 setImage('');
@@ -85,16 +88,34 @@ const NewRecipe = () => {
     };
 
     const handleImageChange = (event) => {
-        const imageFile = event.target.files[0];
+        const file = event.target.files[0];
         const formData = new FormData();
-        formData.append('image', imageFile);
+        formData.append('image', file);
         axios.post('http://localhost:3001/upload', formData)
             .then((response) => {
                 setImage(response.data.url);
+                setUrl(response.data.url);
             })
             .catch((error) => {
                 console.log(error);
             });
+    };
+
+    const handleUrlChange = (event) => {
+        setUrl(event.target.value);
+    }
+    const [useImageAddress, setUseImageAddress] = useState(false);
+
+    const handleRadioChange = (event) => {
+        if (event.target.value === "upload") {
+            setUseImageAddress(false);
+            setImage(null); // clear previous image selection
+            setUrl(""); // clear previous url selection
+        } else if (event.target.value === "address") {
+            setUseImageAddress(true);
+            setImage(null); // clear previous image selection
+            setUrl(""); // clear previous url selection
+        }
     };
 
     return (
@@ -125,6 +146,29 @@ const NewRecipe = () => {
                     <Row>
                         <Col>
                             <Form.Group>
+                                <Form.Label>Cook Time</Form.Label>
+                                <Form.Control type="number" min="0" value={cookTime} placeholder="minutes"
+                                              onChange={(event) => setCookTime(event.target.value)}/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group>
+                                <Form.Label>Prep Time</Form.Label>
+                                <Form.Control type="number" min="0" value={prepTime} placeholder="minutes"
+                                              onChange={(event) => setPrepTime(event.target.value)}/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Group>
+                                <Form.Label>Recipe Yield:</Form.Label>
+                                <Form.Control type="number" min="0" value={recipeYield}
+                                              onChange={(event) => setRecipeYield(event.target.value)}/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group>
                                 <Form.Label>Category:</Form.Label>
                                 <Form.Control as="select" value={category} onChange={handleCategoryChange} id="categories">
                                     <option value="Breakfast">Breakfast</option>
@@ -143,8 +187,9 @@ const NewRecipe = () => {
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>URL:</Form.Label>
-                                <Form.Control type="text" value={url} onChange={(event) => setUrl(event.target.value)}/>
+                                <Form.Label>Description:</Form.Label>
+                                <Form.Control as="textarea" className="textArea" rows={5} value={description}
+                                              onChange={(event) => setDescription(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -152,41 +197,42 @@ const NewRecipe = () => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Image:</Form.Label>
-                                <Form.Control type="file" onChange={handleImageChange}/>
+                                <div>
+                                    <Form.Check
+                                        type="radio"
+                                        id="uploadImage"
+                                        label="Upload an image"
+                                        checked={!useImageAddress}
+                                        onChange={() => setUseImageAddress(false)}
+                                    />
+                                    <Form.Check
+                                        type="radio"
+                                        id="insertImageAddress"
+                                        label="Insert image address"
+                                        checked={useImageAddress}
+                                        onChange={() => setUseImageAddress(true)}
+                                    />
+                                </div>
+                                {useImageAddress ? (
+                                    <Form.Control
+                                        type="text"
+                                        value={image}
+                                        onChange={(event) => setImage(event.target.value)}
+                                    />
+                                ) : (
+                                    <Form.Control
+                                        type="file"
+                                        onChange={handleImageChange}
+                                    />
+                                )}
                             </Form.Group>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Cook Time</Form.Label>
-                                <Form.Control type="number" min="0" value={cookTime} placeholder="minutes"
-                                              onChange={(event) => setCookTime(event.target.value)}/>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>Recipe Yield:</Form.Label>
-                                <Form.Control type="number" min="0" value={recipeYield}
-                                              onChange={(event) => setRecipeYield(event.target.value)}/>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>Prep Time</Form.Label>
-                                <Form.Control type="number" min="0" value={prepTime} placeholder="minutes"
-                                              onChange={(event) => setPrepTime(event.target.value)}/>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>Description:</Form.Label>
-                                <Form.Control as="textarea" className="textArea" rows={5} value={description}
-                                              onChange={(event) => setDescription(event.target.value)}/>
+                                <Form.Label>URL:</Form.Label>
+                                <Form.Control type="text" value={url} placeholder="If recipe is borrowed, add url to original recipe" onChange={(event) => setUrl(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
