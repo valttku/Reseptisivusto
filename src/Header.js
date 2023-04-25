@@ -5,7 +5,7 @@ import { NavLink, Link } from 'react-router-dom';
 import './navbar.css'
 import recipes from './recipes.json';
 
-function Header(props) {
+function Header() {
     const [signedIn, setSignedIn] = useState(sessionStorage.getItem("signedIn") ? sessionStorage.getItem("signedIn") === "true" : false);
     const signinUsername = sessionStorage.getItem('signinUsername');
     const [searchQuery, setSearchQuery] = useState('');
@@ -36,7 +36,9 @@ function Header(props) {
 
     return (
         <Navbar expand="lg">
-            <Navbar.Brand id="topheading" href="/">My Recipe App</Navbar.Brand>
+            <Navbar.Brand id="topheading" href="/">
+                My Recipe App
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <div className="nav-container">
@@ -71,10 +73,29 @@ function Header(props) {
                                     Search
                                 </Button>
                             </Form>
+                        </div>
+                    </section>
+                    <section className="loggedIn">
+                        {signedIn && (
+                            <>
+                                Signed in as&nbsp;<b>{signinUsername}</b>
+                                <Button
+                                    variant="outline-success"
+                                    type="Signout"
+                                    onClick={handleSignout}
+                                    className="loggedInButton"
+                                >
+                                    Sign out
+                                </Button>
+                            </>
+                        )}
+                    </section>
+                    <section>
+                        <div className="search-container">
                             {searchResults.length > 0 && (
-                                <div>
+                                <div className="search-results">
                                     {searchResults.map((recipe, index) => (
-                                        <div key={index}>
+                                        <div key={index} className="search-result">
                                             <Link to={`/recipe/${recipe.id}`}>
                                                 <img src={recipe.image} alt={recipe.name} />
                                             </Link>
@@ -84,16 +105,6 @@ function Header(props) {
                                 </div>
                             )}
                         </div>
-                    </section>
-                    <section className="loggedIn">
-                        {signedIn && (
-                            <>
-                                Signed in as&nbsp;<b>{signinUsername}</b>
-                                <Button variant="outline-success" type="Signout" onClick={handleSignout} className="loggedInButton">
-                                    Sign out
-                                </Button>
-                            </>
-                        )}
                     </section>
                 </div>
             </Navbar.Collapse>
