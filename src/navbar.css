@@ -87,7 +87,6 @@
     border-color: black;
     color: black;
 }
-
 @media (min-width: 992px) {
     .navbar-expand-lg .navbar-collapse {
         display: flex!important;
