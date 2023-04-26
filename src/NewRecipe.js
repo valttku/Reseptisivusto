@@ -20,11 +20,7 @@ const NewRecipe = () => {
     const [date, setDate] = useState('');
     const [prepTime, setPrepTime] = useState('');
     const [description, setDescription] = useState('');
-    const [selectedOption, setSelectedOption] = useState("");
-
     const [recipes, setRecipes] = useState([]);
-
-
 
     useEffect(() => {
         setRecipes(recipesData);
@@ -58,7 +54,7 @@ const NewRecipe = () => {
 
         axios
             .post('http://localhost:3001/NewRecipe', { ...recipe, id: recipe.id })
-            .then((response) => {
+            .then(() => {
                 setAuthor('');
                 setImage('');
                 setDate('');
@@ -154,16 +150,16 @@ const NewRecipe = () => {
                     <Row>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Cook Time:</Form.Label>
-                                <Form.Control type="number" min="0" value={cookTime} placeholder="minutes"
-                                              onChange={(event) => setCookTime(event.target.value)}/>
+                                <Form.Label>Prep Time:</Form.Label>
+                                <Form.Control type="number" min="0" value={prepTime} placeholder="minutes"
+                                              onChange={(event) => setPrepTime(event.target.value)}/>
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group>
-                                <Form.Label>Prep Time:</Form.Label>
-                                <Form.Control type="number" min="0" value={prepTime} placeholder="minutes"
-                                              onChange={(event) => setPrepTime(event.target.value)}/>
+                                <Form.Label>Cook Time:</Form.Label>
+                                <Form.Control type="number" min="0" value={cookTime} placeholder="minutes"
+                                              onChange={(event) => setCookTime(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>

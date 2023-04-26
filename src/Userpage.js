@@ -1,18 +1,21 @@
 import React, {useState, useEffect} from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import {Container, Row, Form, Button} from "react-bootstrap";
 import Header from "./Header";
 import Footer from "./Footer";
-import axios from 'axios';
-
+import axios from "axios";
+import "./Userpage.css";
+import placeholderImage from "./img/placeholder-image.jpg";
 
 function Userpage() {
+
     const signinUsername = sessionStorage.getItem("signinUsername");
     const [filteredRecipes, setFilteredRecipes] = useState([]);
     const [selectedRecipe, setSelectedRecipe] = useState(null);
-    const [showPopup, setShowPopup] = useState(false);
-//.
+    const [showPopup, setShowPopup] = useState(null);
+
     useEffect(() => {
-        axios.get('http://localhost:3001/recipes')
+        axios
+            .get("http://localhost:3001/recipes")
             .then((response) => {
                 const filteredRecipes = response.data.filter(
                     (recipe) => recipe.author === signinUsername
@@ -28,123 +31,144 @@ function Userpage() {
         axios
             .delete(`http://localhost:3001/recipes/${recipeName}`)
             .then(() => {
-                const newRecipes = filteredRecipes.filter((recipe) => recipe.name !== recipeName);
+                const newRecipes = filteredRecipes.filter(
+                    (recipe) => recipe.name !== recipeName
+                );
                 setFilteredRecipes(newRecipes);
             })
             .catch((err) => console.log(err));
     };
 
     const editRecipe = (recipe) => {
-        setSelectedRecipe(recipe);
-        setShowPopup(true);
+        const recipeCopy = JSON.parse(JSON.stringify(recipe));
+        setSelectedRecipe({...recipeCopy, id: recipe.id.toString()});
+        setShowPopup(recipe.id.toString());
     };
 
     const recipeList = filteredRecipes.map((recipe) => {
+        const ingredients = recipe.ingredients.split("\n").map((ingredient, index) => (
+            <li key={index}>{ingredient.trim()}</li>
+        ));
+
         return (
-            <div className="card my-3" key={recipe.name}>
-                <div className="card-header">{recipe.name}</div>
+            <div className="card my-3" key={recipe.id} id="recipeCard">
+                <h3>{recipe.name}</h3>
                 <div className="card-body">
                     <img
-                        src={recipe.image}
+                        src={recipe.image || placeholderImage}
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = placeholderImage;
+                        }}
                         className="img-fluid mx-auto d-block my-3"
                         alt="Recipe image"
                     />
-                    <ul>
-                        <li>
-                            <strong>Ingredients:</strong> {recipe.ingredients}
-                        </li>
-                        <li>
-                            <strong>Category:</strong> {recipe.category}
-                        </li>
-                        <li>
-                            <strong>Author:</strong> {recipe.author}
-                        </li>
-                        <li>
-                            <strong>URL:</strong> <a href={recipe.url}>{recipe.url}</a>
-                        </li>
-                        <li>
-                            <strong>Cook time:</strong> {recipe.cookTime}
-                        </li>
-                        <li>
-                            <strong>Recipe yield:</strong> {recipe.recipeYield}
-                        </li>
-                        <li>
-                            <strong>Date published:</strong> {recipe.date}
-                        </li>
-                        <li>
-                            <strong>Prep time:</strong> {recipe.prepTime}
-                        </li>
-                        <li>
-                            <strong>Description:</strong> {recipe.description}
-                        </li>
-                    </ul>
-                    <button onClick={() => deleteRecipe(recipe.name)}>Delete</button>
-                    <button onClick={() => editRecipe(recipe)}>Edit</button>
+                    <p><strong>Description:</strong> {recipe.description}</p>
+                    <div id="recipeInfo">
+                        <div id="ingredients">
+                            <p><strong>Ingredients:</strong></p>
+                            <ul>
+                                {ingredients}
+                            </ul>
+                        </div>
+                        <div>
+                            <p><strong>Author:</strong></p>
+                            <ul>
+                                <li> {recipe.author}</li>
+                            </ul>
+                            <p><strong>Cook time:</strong></p>
+                            <ul>
+                                <li>{recipe.cookTime}</li>
+                            </ul>
+                            <p><strong>Recipe yield:</strong></p>
+                            <ul>
+                                <li>{recipe.recipeYield}</li>
+                            </ul>
+                            <p><strong>Date published:</strong></p>
+                            <ul>
+                                <li>{recipe.date}</li>
+                            </ul>
+                            <p><strong>Prep time:</strong></p>
+                            <ul>
+                                <li>{recipe.prepTime}</li>
+                            </ul>
+                            <p><strong>Category:</strong></p>
+                            <ul>
+                                <li>{recipe.category}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div id="editAndDelete">
+                        <Button onClick={() => editRecipe(recipe)}>Edit Name</Button>{" "}
+                        <Button onClick={() => deleteRecipe(recipe.name)}>Delete</Button>
+                    </div>
                 </div>
+                {showPopup === recipe.id.toString() && (
+                    <div className="popup">
+                        <Form onSubmit={(e) => {
+                            e.preventDefault();
+                            axios
+                                .put(`http://localhost:3001/recipes/${selectedRecipe.id}`, selectedRecipe)
+                                .then((response) => {
+                                    console.log('Response:', response.data);
+                                    const updatedRecipe = response.data;
+                                    const updatedRecipes = filteredRecipes.map((recipe) => {
+                                        if (recipe.id === updatedRecipe.id) { // compare using id instead of name
+                                            return updatedRecipe;
+                                        } else {
+                                            return recipe;
+                                        }
+                                    });
+                                    setFilteredRecipes(updatedRecipes);
+                                    setShowPopup(null); // reset showPopup state after saving changes
+                                    window.location.reload();
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                    setShowPopup(null); // reset showPopup state after error
+                                });
+                        }}>
+                            <Form.Group controlId="name">
+                                <div id="popUpBarAndButtons">
+                                    <Form.Control
+                                        className="my-input-field"
+                                        type="text"
+                                        value={selectedRecipe.name}
+                                        onChange={(e) =>
+                                            setSelectedRecipe({
+                                                ...selectedRecipe,
+                                                name: e.target.value,
+                                            })
+                                        }
+                                    />
+                                    <div id="buttons">
+                                        <Button type="submit">
+                                            Save Changes
+                                        </Button>
+                                        <Button onClick={() => setShowPopup(null)}>
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </div>
+                            </Form.Group>
+                        </Form>
+                    </div>
+                )}
             </div>
         );
     });
 
     return (
-        <>
+        <div>
             <Header/>
-            <div className="container mt-3">
-                <h2 className="mb-3">{signinUsername}'s Recipes</h2>
-                {recipeList}
-                {showPopup && (
-                    <div className="popup">
-                        <div className="popup-inner">
-                            <h2>Edit recipe name</h2>
-                            <form
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    axios
-                                        .put(`http://localhost:3001/recipes/${selectedRecipe.id}`, selectedRecipe)
-                                        .then((response) => {
-                                            console.log('Response:', response.data);
-                                            const updatedRecipe = response.data;
-                                            const updatedRecipes = filteredRecipes.map((recipe) => {
-                                                if (recipe.name === updatedRecipe.name) {
-                                                    return updatedRecipe;
-                                                } else {
-                                                    return recipe;
-                                                }
-                                            });
-
-                                            setFilteredRecipes(updatedRecipes);
-                                            setShowPopup(false);
-                                        })
-                                        .catch((error) => {
-                                            console.error('Error:', error);
-                                            setShowPopup(false);
-                                        });
-                                }}
-                            >
-                                <label htmlFor="name">Recipe name:</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={selectedRecipe.name}
-                                    onChange={(e) =>
-                                        setSelectedRecipe({
-                                            ...selectedRecipe,
-                                            name: e.target.value,
-                                        })
-                                    }
-                                />
-
-                                <button type="submit">Save Changes</button>
-                                <button type="button" onClick={() => setShowPopup(false)}>
-                                    Cancel
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                )}
-            </div>
+            <Container fluid className="userpageBody">
+                <h2>{signinUsername}'s Recipes</h2>
+                <Row>{recipeList}</Row>
+                <br/>
+            </Container>
             <Footer/>
-        </>
+        </div>
     );
 }
 
