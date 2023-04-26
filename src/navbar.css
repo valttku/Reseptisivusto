@@ -14,17 +14,21 @@
 
 #navigate {
     display: flex;
-    justify-content: right;
-    align-items: center;
-    margin-bottom: 10px;
+    align-items: flex-start;
 }
 
 #navigate #navLinks {
     display: flex;
+    justify-content: right;
+    font-size: 1.4rem;
 }
 
 #navigate Form {
     display: flex;
+}
+
+#navigate #searchBarAndButton {
+    margin-bottom: 10px;
 }
 
 #navigate Form .userInput {
@@ -34,7 +38,7 @@
     border-color: black;
     color: black;
     min-width: 150px;
-    margin-left: 30px;
+    margin-left: 40px;
     padding: 5px;
 }
 
@@ -55,9 +59,7 @@
 }
 
 .nav-link {
-    font-size: 1.4rem;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-left: 30px;
 }
 
 .nav-link:hover {
@@ -87,7 +89,30 @@
     border-color: black;
     color: black;
 }
+
+@media (max-width: 992px) {
+
+    #navigate {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #navigate #navLinks {
+        display: block;
+    }
+
+    #navigate #myRecipes {
+        margin-top: 10px;
+    }
+
+
+    .nav-link {
+        margin-left: 10px;
+    }
+}
+
 @media (min-width: 992px) {
+
     .navbar-expand-lg .navbar-collapse {
         display: flex!important;
         flex-basis: auto;
@@ -97,32 +122,31 @@
 
 /* Search bar juttuja! */
 
-.search-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
 .search-results {
     position: absolute;
     top: 100%;
-    left: 0;
-    width: 100%;
-    max-height: 300px;
+    max-height: 275px;
     overflow-y: auto;
     background-color: white;
-    border: 1px solid #ced4da;
-    border-top: none;
+    box-shadow: 0 5px 20px rgba(0,0,0,.1);
     z-index: 999;
 }
 
 .search-result {
-    display: flex;
-    align-items: center;
-    padding: 5px;
     cursor: pointer;
+    padding: 14px 15px 1px 15px;
+}
+
+.search-result p {
+    word-wrap: break-word;
+}
+
+.search-result a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
 }
 
 .search-result:hover {
-    background-color: #f2f2f2;
+    background-color: #e2c9ba;
 }

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Navbar, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import './navbar.css'
 import recipes from './recipes.json';
-import {useNavigate} from 'react-router-dom';
 
 function Header() {
+
     const [signedIn, setSignedIn] = useState(sessionStorage.getItem("signedIn") ? sessionStorage.getItem("signedIn") === "true" : false);
     const signinUsername = sessionStorage.getItem('signinUsername');
     const [searchQuery, setSearchQuery] = useState('');
@@ -37,11 +37,22 @@ function Header() {
         }
     }
 
+    const searchRef = useRef(null);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setSearchResults([]);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <Navbar expand="lg">
-            <Navbar.Brand id="topheading" href="/">
-                My Recipe App
-            </Navbar.Brand>
+            <Navbar.Brand id="topheading" href="/">Recipe App</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <div className="nav-container">
@@ -52,7 +63,7 @@ function Header() {
                                     <NavLink to="/NewRecipe" className="nav-link">
                                         Add new recipe
                                     </NavLink>
-                                    <NavLink to="/Userpage" className="nav-link">
+                                    <NavLink to="/Userpage" className="nav-link" id="myRecipes">
                                         My recipes
                                     </NavLink>
                                 </>
@@ -64,7 +75,7 @@ function Header() {
                             )}
                         </div>
                         <div>
-                            <Form onSubmit={handleSearch}>
+                            <Form id="searchBarAndButton" onSubmit={handleSearch}>
                                 <Form.Control
                                     type="text"
                                     placeholder="Find a recipe"
@@ -76,37 +87,34 @@ function Header() {
                                     Search
                                 </Button>
                             </Form>
-                        </div>
-                    </section>
-                    <section className="loggedIn">
-                        {signedIn && (
-                            <>
-                                Signed in as&nbsp;<b>{signinUsername}</b>
-                                <Button
-                                    variant="outline-success"
-                                    type="Signout"
-                                    onClick={handleSignout}
-                                    className="loggedInButton"
-                                >
-                                    Sign out
-                                </Button>
-                            </>
-                        )}
-                    </section>
-                    <section>
-                        <div className="search-container">
-                            {searchResults.length > 0 && (
-                                <div className="search-results">
-                                    {searchResults.map((recipe, index) => (
-                                        <div key={index} className="search-result">
-                                            <Link to={`/recipe/${recipe.id}`}>
-                                                <img src={recipe.image} alt={recipe.name} />
-                                            </Link>
-                                            <p>{recipe.name}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                            <div className="loggedIn">
+                                {signedIn && (
+                                    <>
+                                        Signed in as&nbsp;<b>{signinUsername}</b>
+                                        <Button
+                                            variant="outline-success"
+                                            type="Signout"
+                                            onClick={handleSignout}
+                                            className="loggedInButton"
+                                        >
+                                            Sign out
+                                        </Button>
+                                    </>
+                                )}
+                            </div>
+                            <div className="search-container" ref={searchRef}>
+                                {searchResults.length > 0 && (
+                                    <div className="search-results">
+                                        {searchResults.map((recipe, index) => (
+                                            <div key={index} className="search-result">
+                                                <Link to={`/recipe/${recipe.id}`} onClick={() => setSearchResults([])}>
+                                                    <p>{recipe.name}</p>
+                                                </Link>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </section>
                 </div>
