@@ -99,7 +99,7 @@ function Userpage() {
                                 onSubmit={(e) => {
                                     e.preventDefault();
                                     axios
-                                        .put(`http://localhost:3001/recipes/${selectedRecipe.name}`, selectedRecipe)
+                                        .put(`http://localhost:3001/recipes/${selectedRecipe.id}`, selectedRecipe)
                                         .then((response) => {
                                             console.log('Response:', response.data);
                                             const updatedRecipe = response.data;
@@ -110,6 +110,7 @@ function Userpage() {
                                                     return recipe;
                                                 }
                                             });
+
                                             setFilteredRecipes(updatedRecipes);
                                             setShowPopup(false);
                                         })

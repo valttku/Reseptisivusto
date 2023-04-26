@@ -32,7 +32,7 @@ connection.connect((error) => {
 });
 
 //Lisää kaikki reseptit omaan tietokantaan:
-/*
+
 for (let i = 0; i < recipesjson.length; i++) {
     const recipe = recipesjson[i];
     const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = recipe;
@@ -45,7 +45,7 @@ for (let i = 0; i < recipesjson.length; i++) {
             console.log('Recipe added to database:', recipe.name);
         }
     });
-}*/
+}
 //Kuvien lisäys kasnioon Multeria käyttäen
 const multer = require('multer');
 //const path = require('path');
@@ -173,16 +173,19 @@ app.get('/recipes/:name', (req, res) => {
 
 // Päivitetään recipe nimen perusteella
 
-app.put('/recipes/:name', (req, res) => {
+app.put('/recipes/:id', (req, res) => {
     const { id } = req.params;
     console.log('Logataan id:', id);
-    const { name} = req.body;
+    const { name } = req.body;
     console.log('Logataan nimi:', name);
 
     const query = `UPDATE recipes 
-                 SET name = ?`;
+                 SET name = ?
+                 WHERE id = ?`;
 
-    connection.query(query, [name,id], (error, results) => {
+
+
+    connection.query(query, [name, id], (error, results) => {
         if (error) {
             console.log('Error updating recipe:', error);
             res.status(500).json({ message: 'Internal server error' });
@@ -192,6 +195,7 @@ app.put('/recipes/:name', (req, res) => {
         }
     });
 });
+
 
 // Poistetaan recipe nimen perusteella
 app.delete('/recipes/:name', (req, res) => {
