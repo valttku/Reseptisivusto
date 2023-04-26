@@ -96,9 +96,9 @@ const NewRecipe = () => {
         axios.post('http://localhost:3001/upload', formData)
             .then((response) => {
                 const imageName = response.data.filename;
-                const imagePath = './img/' + imageName;
+                const imagePath = 'http://localhost:3001/img/' + imageName;
                 setImage(imagePath);
-                setUrl(imagePath);
+                //setUrl(imagePath);
                 console.log(`imagePath: ${imagePath}`);
             })
             .catch((error) => {
