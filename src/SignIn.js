@@ -121,6 +121,10 @@ function SignIn() {
                 alert('Error registering user');
                 console.log(error);
             });
+        setSigninUsername(registerUsername);
+        setSigninPassword(registerPassword);
+        alert("You are now registered and all set to sign in. Click \"Sign in\" to enter.");
+
     };
 
     function handleRegistrationClick() {
