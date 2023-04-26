@@ -30,6 +30,7 @@ const NewRecipe = () => {
         setRecipes(recipesData);
         const currentDate = new Date().toISOString().slice(0, 10);
         setDate(currentDate);
+        setCategory("Breakfast")
     }, []);
 
     const handleSubmit = (event) => {
@@ -69,6 +70,7 @@ const NewRecipe = () => {
                 setDescription('');
                 setIngredients('');
                 setName('');
+                window.location.reload();
             })
             .catch((error) => {
                 alert('Error registering recipes');
@@ -230,14 +232,6 @@ const NewRecipe = () => {
                                         onChange={handleImageChange}
                                     />
                                 )}
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>URL:</Form.Label>
-                                <Form.Control type="text" value={url} placeholder="If recipe is borrowed, add url to original recipe" onChange={(event) => setUrl(event.target.value)}/>
                             </Form.Group>
                         </Col>
                     </Row>
