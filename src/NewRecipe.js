@@ -89,17 +89,23 @@ const NewRecipe = () => {
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
+        console.log(`const file: ${file}`);
+
         const formData = new FormData();
         formData.append('image', file);
         axios.post('http://localhost:3001/upload', formData)
             .then((response) => {
-                setImage(response.data.url);
-                setUrl(response.data.url);
+                const imageName = response.data.filename;
+                const imagePath = './img/' + imageName;
+                setImage(imagePath);
+                setUrl(imagePath);
+                console.log(`imagePath: ${imagePath}`);
             })
             .catch((error) => {
                 console.log(error);
             });
     };
+
 
     const handleUrlChange = (event) => {
         setUrl(event.target.value);
