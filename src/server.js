@@ -15,10 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 // MySQL:llän tietokannan config
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'olso',
-    password: 'olso',
+    user: 'root',
+    password: 'root',
     database: 'recipes',
-    port: 3307
+    //port: 3307
 });
 
 connection.connect((error) => {
@@ -31,7 +31,7 @@ connection.connect((error) => {
 });
 
 //Lisää kaikki reseptit omaan tietokantaan:
-/*for (let i = 0; i < recipesjson.length; i++) {
+for (let i = 0; i < recipesjson.length; i++) {
     const recipe = recipesjson[i];
     const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = recipe;
     const query = `INSERT INTO recipes (id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
@@ -43,7 +43,7 @@ connection.connect((error) => {
             console.log('Recipe added to database:', recipe.name);
         }
     });
-}*/
+}
 //TUULI
 const multer = require('multer');
 const path = require('path');

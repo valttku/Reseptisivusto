@@ -4,18 +4,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { NavLink, Link } from 'react-router-dom';
 import './navbar.css'
 import recipes from './recipes.json';
+import {useNavigate} from 'react-router-dom';
 
 function Header() {
     const [signedIn, setSignedIn] = useState(sessionStorage.getItem("signedIn") ? sessionStorage.getItem("signedIn") === "true" : false);
     const signinUsername = sessionStorage.getItem('signinUsername');
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const navigate = useNavigate();
 
     const handleSignout = () => {
         localStorage.setItem('signinUsername', '');
         setSignedIn(false);
         sessionStorage.removeItem('signedIn');
         sessionStorage.removeItem('signinUsername');
+        navigate('/');
     }
 
     const handleSearch = (event) => {
