@@ -7,7 +7,6 @@ import recipes from './recipes.json';
 
 /**
  * Renderöi projektin navigointipalkin.
- *
  * @returns {JSX.Element} Navbar-komponentti.
  */
 function Header() {
@@ -25,7 +24,6 @@ function Header() {
     const signinUsername = sessionStorage.getItem('signinUsername');
 
     /**
-     *
      * Käyttäjän syöttämä kysely hakukenttään.
      * @type {[string, function]}
      */
@@ -33,7 +31,7 @@ function Header() {
 
     /**
      * Hakutulokset, jotka palautuvat kyselystä.
-     * @type {Array}
+     * @type {array}
      */
     const [searchResults, setSearchResults] = useState([]);
 
@@ -43,14 +41,14 @@ function Header() {
     const searchRef = useRef(null);
 
     /**
-     * Reitittimen navigointiobjekti.
+     * Reitittimen navigointiobjekti, jolla voidaan muuttaa URL-osoite.
      * @type {function}
      */
     const navigate = useNavigate();
 
     /**
      * Käsittelee reseptien haun.
-     * @param {Object} event - Tapahtumankäsittelijä
+     * @param {object} event - Tapahtumankäsittelijä
      */
     const handleSearch = (event) => {
         event.preventDefault();
@@ -70,7 +68,6 @@ function Header() {
 
     /**
      * Tarkistaa klikkaako käyttäjä hakupalkin ulkopuolelle.
-     *
      */
     useEffect(() => {
         // Jos käyttäjä klikkaa hakupalkin ulkopuolelle, hakutulokseksi asetetaan tyhjä taulukko ja hakupalkki sulkeutuu.

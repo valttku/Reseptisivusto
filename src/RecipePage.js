@@ -7,28 +7,38 @@ import Footer from "./Footer";
 import placeholderImage from "./img/placeholder-image.jpg";
 import './RecipePage.css';
 
-function RecipePage(props) {
-    // Receive the recipe id as a prop
+/**
+ * Renderöi reseptisivun reseptille riippuen reseptin id:stä sivun URL:ssä.
+ * @returns {JSX.Element}
+ */
+function RecipePage() {
+
+    /**
+     * Hakee id-parametrin URL:stä.
+     */
     const { id } = useParams();
 
-    console.log('id:', id);
-
+    /**
+     * Etsii resepti-olion listasta id:n perusteella.
+     * @type {object | undefined} - Resepti-olio tai undefined, jos reseptiä ei löytynyt.
+     */
     const recipe = recipes.find((recipe) => recipe.id === parseInt(id));
-    console.log();
-    console.log('recipe:', recipe);
-    console.log('respa0 :', recipes[0]);
 
-    if (!recipe) {
-        return <div>Recipe not found</div>;
-    }
-
-    // Split ingredients by newline character and map to list items
+    /**
+     * Jakaa reseptin ainesosat \n-merkillä ja käy listan läpi. Asettaa ainesosat listaan.
+     * @type {JSX.Element[]} - Lista reseptin ainesosista.
+     */
     const ingredientsList = recipe.ingredients.split('\n').map((ingredient, index) => {
         return <li key={index}>{ingredient}</li>;
     });
 
+    // Jos reseptiä ei löydy id:n perusteella, tämä renderöidään sivulle
+    if (!recipe) {
+        return <div>Recipe not found</div>;
+    }
+
     return (
-        <>
+        <div>
             <Header />
             <Container fluid className="recipePageBody">
                 <Row>
@@ -129,7 +139,7 @@ function RecipePage(props) {
                 </Row>
             </Container>
             <Footer />
-        </>
+        </div>
     );
 }
 

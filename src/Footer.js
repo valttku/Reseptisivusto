@@ -1,6 +1,10 @@
 import React from 'react';
 import './footer.css'
 
+/**
+ * Renderöi projektin Footer-komponentin, josta löytyy projektin tekijät sekä nykyinen vuosi.
+ * @returns {JSX.Element} Footer-komponentti
+ */
 function Footer() {
     return (
         <footer>

@@ -6,9 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 
 /**
- * Komponentti renderöi sivun header, body ja footer komponenteista koostuvan näkymän
+ * Komponentti renderöi sivun Header-, Body- ja Footer-komponenteista koostuvan näkymän.
  * @returns {JSX.Element}
- * @constructor
  */
 function App() {
 
