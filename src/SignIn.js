@@ -159,14 +159,9 @@ function SignIn() {
             password: registerPassword,
         };
         const form = event.target;
-        //Testing
-        console.log("Tässä uusi käyttäjä: " + JSON.stringify(formData));
+
         const users = require("./userDetails.json");
-        console.log("Tässä kaikki käyttäjät:");
-        console.dir(users);
         users.push(formData);
-        console.log("Tässä kaikki käyttäjät uudelleen:");
-        console.dir(users);
 
         //Lähetetään serverille tiedot rekisteröitävistä käyttäjätiedoista
         axios

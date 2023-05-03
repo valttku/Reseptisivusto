@@ -116,10 +116,7 @@ const NewRecipe = () => {
             prepTime: prepTime + " minutes",
             description,
         };
-        //Testailua
-        console.log("Tässä uusi resepti: " + JSON.stringify(recipe));
-        console.log("Tässä kaikki reseptit:");
-        console.dir(recipes);
+
         setRecipes([...recipes, recipe]);
 //Lähetetään resepti serverille
         axios
@@ -170,7 +167,7 @@ const NewRecipe = () => {
          * Kuvatiedosto
          */
         const file = event.target.files[0];
-        console.log(`const file: ${file}`);
+
 
         /**
          * Lomakkeen tiedot
@@ -190,7 +187,6 @@ const NewRecipe = () => {
                  */
                 const imagePath = 'http://localhost:3001/img/' + imageName;
                 setImage(imagePath);
-                console.log(`imagePath: ${imagePath}`);
             })
             .catch((error) => {
                 console.log(error);

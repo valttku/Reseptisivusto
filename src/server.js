@@ -50,7 +50,7 @@ connection.connect((error) => {
 
 //Lisää kaikki reseptit omaan tietokantaan:
 
-/*for (let i = 0; i < recipesjson.length; i++) {
+for (let i = 0; i < recipesjson.length; i++) {
     const recipe = recipesjson[i];
     const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = recipe;
     const query = `INSERT INTO recipes (id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
@@ -62,7 +62,7 @@ connection.connect((error) => {
             console.log('Recipe added to database:', recipe.name);
         }
     });
-}*/
+}
 //Kuvien lisäys kasnioon Multeria käyttäen
 
 /**
@@ -116,12 +116,8 @@ app.post('/upload', upload.single('image'), (req, res) => {
  */
 app.post('/signin', (req, res) => {
     const { username, email, password } = req.body;
-    console.log("Tässä uusi käyttäjä: " + JSON.stringify(req.body));
-    console.log("Tässä kaikki käyttäjät:");
-    console.dir(users);
     users.push(req.body);
-    console.log("Tässä kaikki käyttäjät uudelleen:");
-    console.dir(users);
+
 //tallennus json-tiedostoon:
     fs.writeFile('./userDetails.json', JSON.stringify(users), (err) => {
         if (err) {
@@ -221,10 +217,10 @@ app.get('/recipes/:name', (req, res) => {
 app.put('/recipes/:id', (req, res) => {
     //päivitettävän reseptin id
     const { id } = req.params;
-    console.log('Logataan id:', id);
+
     //päivitettävän reseptin uusi nimi
     const { name } = req.body;
-    console.log('Logataan nimi:', name);
+
     let recipesjson = fs.readFileSync('./recipes.json', 'utf-8');
     const recipes = JSON.parse(recipesjson);
     const index = recipes.findIndex((recipe) => recipe.id === parseInt(id));
@@ -232,8 +228,6 @@ app.put('/recipes/:id', (req, res) => {
         console.log('Recipe not found');
         res.status(404).json({ message: 'Recipe not found' });
     } else {
-        console.log('test');
-        console.log('Logataan löydetty nimi json-filestä: ', recipes[index].name);
         recipes[index].name = name;
         //päivitys recipes.json-tiedostoon
         fs.writeFile('./recipes.json', JSON.stringify(recipes), (err) => {
@@ -259,10 +253,6 @@ app.put('/recipes/:id', (req, res) => {
         });
     }
 });
-
-
-
-
 
 // Poistetaan recipe nimen perusteella
 /**
