@@ -33,7 +33,7 @@ connection.connect((error) => {
 
 //Lisää kaikki reseptit omaan tietokantaan:
 
-for (let i = 0; i < recipesjson.length; i++) {
+/*for (let i = 0; i < recipesjson.length; i++) {
     const recipe = recipesjson[i];
     const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = recipe;
     const query = `INSERT INTO recipes (id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
@@ -45,10 +45,9 @@ for (let i = 0; i < recipesjson.length; i++) {
             console.log('Recipe added to database:', recipe.name);
         }
     });
-}
+}*/
 //Kuvien lisäys kasnioon Multeria käyttäen
 const multer = require('multer');
-//const path = require('path');
 //Lisätään kuvat img-kansioon
 const storage = multer.diskStorage({
     destination: './img',
@@ -178,23 +177,41 @@ app.put('/recipes/:id', (req, res) => {
     console.log('Logataan id:', id);
     const { name } = req.body;
     console.log('Logataan nimi:', name);
-
-    const query = `UPDATE recipes 
-                 SET name = ?
-                 WHERE id = ?`;
-
-
-
-    connection.query(query, [name, id], (error, results) => {
-        if (error) {
-            console.log('Error updating recipe:', error);
-            res.status(500).json({ message: 'Internal server error' });
-        } else {
-            console.log('Recipe updated successfully!');
-            res.status(200).json({ message: 'Recipe updated successfully!' });
-        }
-    });
+    let recipesjson = fs.readFileSync('./recipes.json', 'utf-8');
+    const recipes = JSON.parse(recipesjson);
+    const index = recipes.findIndex((recipe) => recipe.id === parseInt(id));
+    if (index === -1) {
+        console.log('Recipe not found');
+        res.status(404).json({ message: 'Recipe not found' });
+    } else {
+        console.log('test');
+        console.log('Logataan löydetty nimi json-filestä: ', recipes[index].name);
+        recipes[index].name = name;
+        fs.writeFile('./recipes.json', JSON.stringify(recipes), (err) => {
+            if (err) {
+                console.log('Error writing to recipes-file:', err);
+                res.status(500).json({ message: 'Internal server error' });
+            } else {
+                console.log('Recipe saved to json-file successfully!');
+                const query = `UPDATE recipes 
+                       SET name = ?
+                       WHERE id = ?`;
+                connection.query(query, [name, id], (error, results) => {
+                    if (error) {
+                        console.log('Error updating recipe:', error);
+                        res.status(500).json({ message: 'Internal server error' });
+                    } else {
+                        console.log('Recipe updated successfully!');
+                        res.status(200).json({ message: 'Recipe updated successfully!' });
+                    }
+                });
+            }
+        });
+    }
 });
+
+
+
 
 
 // Poistetaan recipe nimen perusteella

@@ -66,36 +66,57 @@ function Userpage() {
                     <p><strong>Description:</strong> {recipe.description}</p>
                     <div id="recipeInfo">
                         <div id="ingredients">
+                            {recipe.ingredients && (
+                                <div>
                             <p><strong>Ingredients:</strong></p>
                             <ul>
                                 {ingredients}
                             </ul>
+                        </div>)}
                         </div>
                         <div>
+                            {recipe.author && (
+                                <div>
                             <p><strong>Author:</strong></p>
                             <ul>
                                 <li> {recipe.author}</li>
                             </ul>
+                                </div>)}
+                            {recipe.cookTime && (
+                                <div>
                             <p><strong>Cook time:</strong></p>
                             <ul>
                                 <li>{recipe.cookTime}</li>
                             </ul>
+                                </div>)}
+                            {recipe.recipeYield && (
+                                <div>
                             <p><strong>Recipe yield:</strong></p>
                             <ul>
                                 <li>{recipe.recipeYield}</li>
                             </ul>
+                                </div>)}
+                            {recipe.date && (
+                                <div>
                             <p><strong>Date published:</strong></p>
                             <ul>
                                 <li>{recipe.date}</li>
                             </ul>
+                                </div>)}
+                            {recipe.prepTime && (
+                                <div>
                             <p><strong>Prep time:</strong></p>
                             <ul>
                                 <li>{recipe.prepTime}</li>
                             </ul>
+                                </div>)}
+                            {recipe.category && (
+                                <div>
                             <p><strong>Category:</strong></p>
                             <ul>
                                 <li>{recipe.category}</li>
                             </ul>
+                                </div>)}
                         </div>
                     </div>
                     <hr/>
