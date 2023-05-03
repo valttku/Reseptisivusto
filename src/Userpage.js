@@ -8,14 +8,28 @@ import placeholderImage from "./img/placeholder-image.jpg";
 
 /**
  * Userpage komponentti näyttää kirjautuneen käyttäjän omat reseptit ja antaa käyttäjälle mahdollisuuden muokata ja deletoida omia reseptejään
- *
+ *@constructor
  * @returns {JSX.Element} Userpage-komponentin palautus JSX-muodossa
  */
 function Userpage() {
 // Haetaan kirjautuneen käyttäjän tunnus session storagesta
+    /**
+     * Sign in username
+     * @type {string}
+     */
     const signinUsername = sessionStorage.getItem("signinUsername");
+    /**
+     * User´s recipes
+     * @type {[array, function]}
+     */
     const [filteredRecipes, setFilteredRecipes] = useState([]);
+    /**
+     * Recipe selected by user
+     */
     const [selectedRecipe, setSelectedRecipe] = useState(null);
+    /**
+     * Popup for recipe editing
+     */
     const [showPopup, setShowPopup] = useState(null);
 
     /**
@@ -25,6 +39,9 @@ function Userpage() {
         axios
             .get("http://localhost:3001/recipes")
             .then((response) => {
+                /**
+                 * Kirjautuneen käyttäjän omat reseptit suodatettuna käyttäjänimen perusteella
+                 */
                 const filteredRecipes = response.data.filter(
                     (recipe) => recipe.author === signinUsername
                 );
@@ -36,14 +53,17 @@ function Userpage() {
     }, [signinUsername]);
 
     /**
-     * Poistetaan resepti serveriltä
-     *
+     * Funktio hoitaa reseptin poisamisen serveriltä
      * @param {string} recipeName - Poistettavan reseptin nimi
      */
     const deleteRecipe = (recipeName) => {
         axios
             .delete(`http://localhost:3001/recipes/${recipeName}`)
             .then(() => {
+                /**
+                 * Haetaan uudet reseptit, joissa ei ole mukana enää poistettu resepti
+                 * @type {*[]}
+                 */
                 const newRecipes = filteredRecipes.filter(
                     (recipe) => recipe.name !== recipeName
                 );
@@ -149,6 +169,7 @@ function Userpage() {
                 {showPopup === recipe.id.toString() && (
                     <div className="popup">
                         <Form onSubmit={(e) => {
+                            //Tässä haetaan päivitetyt reseptitedot
                             e.preventDefault();
                             axios
                                 .put(`http://localhost:3001/recipes/${selectedRecipe.id}`, selectedRecipe)

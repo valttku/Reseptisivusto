@@ -8,22 +8,76 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './NewRecipe.css'
 /**
  * Komponentti uuden reseptin lisäämistä varten
+ * @constructor
  * @returns JSX lomake jossa uuden reseptin voi lisätä
  */
 const NewRecipe = () => {
+    /**
+     * username used in sign in
+     * @type {string}
+     */
     const signinUsername = sessionStorage.getItem('signinUsername');
+    /**
+     * Recipe name
+     * @type {[string, function]}
+     */
     const [name, setName] = useState('');
+    /**
+     * Recipe ingredients
+     * @type {[string, function]}
+     */
     const [ingredients, setIngredients] = useState('');
+    /**
+     * Recipe category
+     * @type {[array, function]}
+     */
     const [category, setCategory] = useState([]);
+    /**
+     * Recipe author
+     * @type {[string, function]}
+     */
     const [author, setAuthor] = useState(signinUsername);
+    /**
+     * Url to original recipe is optional
+     * @type {[string, function]}
+     */
     const [url, setUrl] = useState('');
+    /**
+     * Url to image
+     * @type {[string, function]}
+     */
     const [image, setImage] = useState(null);
+    /**
+     * Recipe cookTime
+     * @type {[string, function]}
+     */
     const [cookTime, setCookTime] = useState('');
+    /**
+     * How many people is the recipe for
+     * @type {[string, function]}
+     */
     const [recipeYield, setRecipeYield] = useState('');
+    /**
+     * Current date
+     * @type {[string, function]}
+     */
     const [date, setDate] = useState('');
+    /**
+     * Recipe prep time
+     * @type {[string, function]}
+     */
     const [prepTime, setPrepTime] = useState('');
+    /**
+     * Description of the recipe
+     * @type {[string, function]}
+     */
     const [description, setDescription] = useState('');
+    /**
+     * Recipes
+     * @type {[array, function]}
+     */
     const [recipes, setRecipes] = useState([]);
+
 
     useEffect(() => {
         setRecipes(recipesData);
@@ -39,7 +93,15 @@ const NewRecipe = () => {
      */
     const handleSubmit = (event) => {
         event.preventDefault();
+        /**
+         * Suurin reseptin id
+         * @type {number}
+         */
         const maxId = Math.max(...recipes.map(recipe => recipe.id), 0);
+        /**
+         * Resepti kenttineen
+         * @type {{date: string, image: unknown, recipeYield: string, author: string, name: string, cookTime: string, ingredients: string, description: string, id: number, category: *[], url: string, prepTime: string}}
+         */
         const recipe = {
             id: maxId + 1,
             name,
@@ -59,7 +121,7 @@ const NewRecipe = () => {
         console.log("Tässä kaikki reseptit:");
         console.dir(recipes);
         setRecipes([...recipes, recipe]);
-
+//Lähetetään resepti serverille
         axios
             .post('http://localhost:3001/NewRecipe', { ...recipe, id: recipe.id })
             .then(() => {
@@ -83,12 +145,13 @@ const NewRecipe = () => {
     };
 
     /**
-     * Funktio käsittelee kategoirioiden valinnan.
-     * Huom tällä hetkellä poimii vain viimeisenä valitun kategorian
+     * Funktio käsittelee kategorioiden valinnan.
      * @param {Object} event - Tapahtumankäsittelijä
      */
     const handleCategoryChange = (event) => {
+        //Huom tällä hetkellä poimii vain viimeisenä valitun kategorian
         const options = event.target.options;
+        //valitut kategriat
         const selectedCategories = [];
         for (let i = 0; i < options.length; i++) {
             if (options[i].selected) {
@@ -103,17 +166,30 @@ const NewRecipe = () => {
      * @param {Object} event - Tapahtumankäsittelijä
      */
     const handleImageChange = (event) => {
+        /**
+         * Kuvatiedosto
+         */
         const file = event.target.files[0];
         console.log(`const file: ${file}`);
 
+        /**
+         * Lomakkeen tiedot
+         * @type {FormData}
+         */
         const formData = new FormData();
         formData.append('image', file);
         axios.post('http://localhost:3001/upload', formData)
             .then((response) => {
+                /**
+                 * Kuvan nimi
+                 */
                 const imageName = response.data.filename;
+                /**
+                 * Polku kuvatiedostoon
+                 * @type {string}
+                 */
                 const imagePath = 'http://localhost:3001/img/' + imageName;
                 setImage(imagePath);
-                //setUrl(imagePath);
                 console.log(`imagePath: ${imagePath}`);
             })
             .catch((error) => {
@@ -123,9 +199,9 @@ const NewRecipe = () => {
 
     /**
      * Funktio käsittelee käyttäjän syöttämän urlin lisäämisen
-     * (Huom. urlia ei enää pyydetä viimeisimmässä versiossa)
      * @param {Object} event - Tapahtumankäsittelijä
      */
+    //Huom. urlia ei enää pyydetä viimeisimmässä versiossa
     const handleUrlChange = (event) => {
         setUrl(event.target.value);
     }
@@ -136,10 +212,12 @@ const NewRecipe = () => {
      * @param {Object} event - Tapahtumankäsittelijä
      */
     const handleRadioChange = (event) => {
+        //jos käyttäjä haluaa ladata omista kansioistaan kuvatiedoston
         if (event.target.value === "upload") {
             setUseImageAddress(false);
             setImage(null); // clear previous image selection
             setUrl(""); // clear previous url selection
+            //Jos käyttäjä haluaa syöttää netistä löytyvän kuvan urlin
         } else if (event.target.value === "address") {
             setUseImageAddress(true);
             setImage(null); // clear previous image selection
@@ -199,7 +277,7 @@ const NewRecipe = () => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Category:</Form.Label>
-                                <Form.Control as="select" value={category} onChange={handleCategoryChange} id="categories" multiple>
+                                <Form.Control as="select" value={category} onChange={handleCategoryChange} id="categories">
                                     <option value="Breakfast">Breakfast</option>
                                     <option value="Lunch">Lunch</option>
                                     <option value="Dinner">Dinner</option>

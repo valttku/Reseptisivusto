@@ -11,7 +11,14 @@ import Body from "./Body";
 import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
 
 
+/**
+ * Root-elementti jossa sovellus renderöidään
+ * @type {Root}
+ */
 const root = ReactDOM.createRoot(document.getElementById('root'));
+/**
+ * Renderöi sovelluksen root-elementtiin käyttäen Reactin Strict  modea. Komponenttien reititys hoidetaan täällä.
+ */
 root.render(
     <React.StrictMode>
         <BrowserRouter>
