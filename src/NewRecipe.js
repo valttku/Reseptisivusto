@@ -6,7 +6,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import recipesData from './recipes.json'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './NewRecipe.css'
-
+/**
+ * Komponentti uuden reseptin lisäämistä varten
+ * @returns JSX lomake jossa uuden reseptin voi lisätä
+ */
 const NewRecipe = () => {
     const signinUsername = sessionStorage.getItem('signinUsername');
     const [name, setName] = useState('');
@@ -29,6 +32,11 @@ const NewRecipe = () => {
         setCategory("Breakfast")
     }, []);
 
+    /**
+     * Funktio joka käsittelee lomakkeen lähetyksen kun käyttäjä valitsee "submit"-nappulan.
+     * Tallennetaan reseptin tiedot oikeisiin kenttiin.
+     * @param {Object} event - Tapahtumankäsittelijä
+     */
     const handleSubmit = (event) => {
         event.preventDefault();
         const maxId = Math.max(...recipes.map(recipe => recipe.id), 0);
@@ -46,7 +54,7 @@ const NewRecipe = () => {
             prepTime: prepTime + " minutes",
             description,
         };
-        //Testing
+        //Testailua
         console.log("Tässä uusi resepti: " + JSON.stringify(recipe));
         console.log("Tässä kaikki reseptit:");
         console.dir(recipes);
@@ -74,6 +82,11 @@ const NewRecipe = () => {
             });
     };
 
+    /**
+     * Funktio käsittelee kategoirioiden valinnan.
+     * Huom tällä hetkellä poimii vain viimeisenä valitun kategorian
+     * @param {Object} event - Tapahtumankäsittelijä
+     */
     const handleCategoryChange = (event) => {
         const options = event.target.options;
         const selectedCategories = [];
@@ -85,6 +98,10 @@ const NewRecipe = () => {
         setCategory(selectedCategories.join(", "));
     };
 
+    /**
+     * Funktio käsittelee valokuvan lataamisen järjestelmään
+     * @param {Object} event - Tapahtumankäsittelijä
+     */
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         console.log(`const file: ${file}`);
@@ -104,12 +121,20 @@ const NewRecipe = () => {
             });
     };
 
-
+    /**
+     * Funktio käsittelee käyttäjän syöttämän urlin lisäämisen
+     * (Huom. urlia ei enää pyydetä viimeisimmässä versiossa)
+     * @param {Object} event - Tapahtumankäsittelijä
+     */
     const handleUrlChange = (event) => {
         setUrl(event.target.value);
     }
     const [useImageAddress, setUseImageAddress] = useState(false);
 
+    /**
+     * Funktio käsittelee käyttäjän valinnan kuvan lataamisen ja kuvan osoitteen syöttämisen välillä
+     * @param {Object} event - Tapahtumankäsittelijä
+     */
     const handleRadioChange = (event) => {
         if (event.target.value === "upload") {
             setUseImageAddress(false);
@@ -174,7 +199,7 @@ const NewRecipe = () => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Category:</Form.Label>
-                                <Form.Control as="select" value={category} onChange={handleCategoryChange} id="categories">
+                                <Form.Control as="select" value={category} onChange={handleCategoryChange} id="categories" multiple>
                                     <option value="Breakfast">Breakfast</option>
                                     <option value="Lunch">Lunch</option>
                                     <option value="Dinner">Dinner</option>
