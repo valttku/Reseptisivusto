@@ -5,40 +5,75 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 import './navbar.css'
 import recipes from './recipes.json';
 
+/**
+ * Renderöi projektin navigointipalkin.
+ *
+ * @returns {JSX.Element} Navbar-komponentti.
+ */
 function Header() {
 
+    /**
+     * Kuvastaa onko käyttäjä kirjautunut sisään sovellukseen vai ei.
+     * @type {[boolean, function]}
+     */
     const [signedIn, setSignedIn] = useState(sessionStorage.getItem("signedIn") ? sessionStorage.getItem("signedIn") === "true" : false);
+
+    /**
+     * Käyttäjän kirjautumisnimi.
+     * @type {string}
+     */
     const signinUsername = sessionStorage.getItem('signinUsername');
+
+    /**
+     *
+     * Käyttäjän syöttämä kysely hakukenttään.
+     * @type {[string, function]}
+     */
     const [searchQuery, setSearchQuery] = useState('');
+
+    /**
+     * Hakutulokset, jotka palautuvat kyselystä.
+     * @type {Array}
+     */
     const [searchResults, setSearchResults] = useState([]);
+
+    /**
+     * Viite hakupalkkiin.
+     */
+    const searchRef = useRef(null);
+
+    /**
+     * Reitittimen navigointiobjekti.
+     * @type {function}
+     */
     const navigate = useNavigate();
 
-    const handleSignout = () => {
-        localStorage.setItem('signinUsername', '');
-        setSignedIn(false);
-        sessionStorage.removeItem('signedIn');
-        sessionStorage.removeItem('signinUsername');
-        navigate('/');
-    }
-
+    /**
+     * Käsittelee reseptien haun.
+     * @param {Object} event - Tapahtumankäsittelijä
+     */
     const handleSearch = (event) => {
         event.preventDefault();
-
+        // Etsitään reseptit, joiden nimi sisältää hakukyselyn.
         if (searchQuery) {
             const results = recipes.filter(recipe => {
                 const name = recipe.name.toLowerCase();
                 const query = searchQuery.toLowerCase();
                 return name.includes(query);
             });
-
             setSearchResults(results);
         } else {
+            // Asetetaan tulokseksi tyhjä taulukko, jos reseptejä ei löytynyt.
             setSearchResults([]);
         }
     }
 
-    const searchRef = useRef(null);
+    /**
+     * Tarkistaa klikkaako käyttäjä hakupalkin ulkopuolelle.
+     *
+     */
     useEffect(() => {
+        // Jos käyttäjä klikkaa hakupalkin ulkopuolelle, hakutulokseksi asetetaan tyhjä taulukko ja hakupalkki sulkeutuu.
         const handleClickOutside = (event) => {
             if (searchRef.current && !searchRef.current.contains(event.target)) {
                 setSearchResults([]);
@@ -49,6 +84,18 @@ function Header() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    /**
+     * Käsittelee käyttäjän uloskirjautumisen.
+     */
+    const handleSignout = () => {
+        localStorage.setItem('signinUsername', '');
+        setSignedIn(false);
+        sessionStorage.removeItem('signedIn');
+        sessionStorage.removeItem('signinUsername');
+        // Palautetaan käyttäjä takaisin etusivulle uloskirjautumisen jälkeen.
+        navigate('/');
+    }
 
     return (
         <Navbar expand="lg">
@@ -89,7 +136,7 @@ function Header() {
                             </Form>
                             <div className="loggedIn">
                                 {signedIn && (
-                                    <>
+                                    <div>
                                         Signed in as&nbsp;<b>{signinUsername}</b>
                                         <Button
                                             variant="outline-success"
@@ -99,7 +146,7 @@ function Header() {
                                         >
                                             Sign out
                                         </Button>
-                                    </>
+                                    </div>
                                 )}
                             </div>
                             <div className="search-container" ref={searchRef}>
