@@ -6,13 +6,21 @@ import axios from "axios";
 import "./Userpage.css";
 import placeholderImage from "./img/placeholder-image.jpg";
 
+/**
+ * Userpage komponentti näyttää kirjautuneen käyttäjän omat reseptit ja antaa käyttäjälle mahdollisuuden muokata ja deletoida omia reseptejään
+ *
+ * @returns {JSX.Element} Userpage-komponentin palautus JSX-muodossa
+ */
 function Userpage() {
-
+// Haetaan kirjautuneen käyttäjän tunnus session storagesta
     const signinUsername = sessionStorage.getItem("signinUsername");
     const [filteredRecipes, setFilteredRecipes] = useState([]);
     const [selectedRecipe, setSelectedRecipe] = useState(null);
     const [showPopup, setShowPopup] = useState(null);
 
+    /**
+     * Haetaan reseptit serveriltä ja suodatetaan ne kirjautuneen käyttäjätunnuksen perusteella
+     */
     useEffect(() => {
         axios
             .get("http://localhost:3001/recipes")
@@ -27,6 +35,11 @@ function Userpage() {
             });
     }, [signinUsername]);
 
+    /**
+     * Poistetaan resepti serveriltä
+     *
+     * @param {string} recipeName - Poistettavan reseptin nimi
+     */
     const deleteRecipe = (recipeName) => {
         axios
             .delete(`http://localhost:3001/recipes/${recipeName}`)
@@ -39,17 +52,25 @@ function Userpage() {
             .catch((err) => console.log(err));
     };
 
+    /**
+     * Asetetaan valittu resepti muokattavaksi ja näytetään muokattava kenttä (reseptin nimi) popupissa
+     *
+     * @param {object} recipe - Muokattava resepti
+     */
     const editRecipe = (recipe) => {
         const recipeCopy = JSON.parse(JSON.stringify(recipe));
         setSelectedRecipe({...recipeCopy, id: recipe.id.toString()});
         setShowPopup(recipe.id.toString());
     };
-
+    /**
+     * Mäpätään reseptit reseptikorteiksi ja palautetaan reseptin kentät halutussa muodossa
+     */
     const recipeList = filteredRecipes.map((recipe) => {
+        // Jaetaan ingredients-merkkijono osiin, jotta saadaan käytettyä niiden kanssa li-elementtejä
         const ingredients = recipe.ingredients.split("\n").map((ingredient, index) => (
             <li key={index}>{ingredient.trim()}</li>
         ));
-
+//Tässä palautetaan valittu resepti halutussa muodossa ja laitetaan näkyviin vain ne kentät reseptistä, mitkä eivät ole tyhjiä
         return (
             <div className="card my-3" key={recipe.id} id="recipeCard">
                 <h3>{recipe.name}</h3>
@@ -135,19 +156,19 @@ function Userpage() {
                                     console.log('Response:', response.data);
                                     const updatedRecipe = response.data;
                                     const updatedRecipes = filteredRecipes.map((recipe) => {
-                                        if (recipe.id === updatedRecipe.id) { // compare using id instead of name
+                                        if (recipe.id === updatedRecipe.id) { // tehdään vertailu id:n perusteella
                                             return updatedRecipe;
                                         } else {
                                             return recipe;
                                         }
                                     });
                                     setFilteredRecipes(updatedRecipes);
-                                    setShowPopup(null); // reset showPopup state after saving changes
+                                    setShowPopup(null); // suljetaan muokkaus-popup editoinnin jälkeen
                                     window.location.reload();
                                 })
                                 .catch((error) => {
                                     console.error('Error:', error);
-                                    setShowPopup(null); // reset showPopup state after error
+                                    setShowPopup(null); // suljetaan muokkaus-popup jos tulee virhe
                                 });
                         }}>
                             <Form.Group controlId="name">
@@ -179,7 +200,7 @@ function Userpage() {
             </div>
         );
     });
-
+//Palautetaan näkymä joka sisältää tarpeelliset elementit
     return (
         <div>
             <Header/>
