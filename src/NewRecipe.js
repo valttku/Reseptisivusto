@@ -139,7 +139,7 @@ const NewRecipe = () => {
                 window.location.reload();
             })
             .catch((error) => {
-                alert('Error registering recipes');
+                alert('Error registering recipes. Make sure that you have a successful database connection and that you have filled ALL recipe details.');
                 console.log(error);
             });
     };

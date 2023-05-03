@@ -8,89 +8,151 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useNavigate} from 'react-router-dom';
 import './signIn.css'
 
+/**
+ * Funktio SignIn, joka renderöi kirjautumissivun.
+ * @returns {JSX.Element} Kirjautumissivun komponentti.
+ */
 function SignIn() {
-// Sign in form state
+
+    /**
+     * Kirjautumisessa käytetty käyttäjänimi
+     * @type {[string, function]}
+     */
     const [signinUsername, setSigninUsername] = useState('');
+    /**
+     * Kirjautumisessa käytetty salasana
+     * @type {[string, function]}
+     */
     const [signinPassword, setSigninPassword] = useState('');
-
-
-// Register form state
+    /**
+     * Rekisteröinnissä käytetty uusi käyttäjänimi
+     * @type {[string, function]}
+     */
     const [registerUsername, setRegisterUsername] = useState('');
+    /**
+     * Rekisteröinnissä käytetty uusi email-osoite
+     * @type {[string, function]}
+     */
     const [registerEmail, setRegisterEmail] = useState('');
+    /**
+     * Rekisteröinnissä käytetty uusi salasana
+     * @type {[string, function]}
+     */
     const [registerPassword, setRegisterPassword] = useState('');
+    /**
+     * Rekisteröinnin vastausdatan asettaminen
+     * @type {[string, function]}
+     */
     const [post, setPost] = React.useState(null);
+    /**
+     * Kertoo onko käyttäjä kirjautuneena sisään vai ei
+     * @type {[boolean, function]}
+     */
     const [signedIn, setSignedIn] = useState(sessionStorage.getItem("signedIn") ? sessionStorage.getItem("signedIn") === "true" : false);
+    /**
+     * Reitittimen navigointiobjekti, jolla voidaan muuttaa URL-osoite.
+     * @type {function}
+     */
     const navigate = useNavigate();
+    /**
+     * Kertoo onko käyttäjä valinnut näytettäväksi myös rekisteröintilomakkeen vai ei.
+     * @type {[boolean, function]}
+     */
     const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+    /**
+     * Rekisteröinnissä käytetty salasana annettuna uudelleen
+     * @type {[string, function]}
+     */
     const [confirmPassword, setConfirmPassword] = useState('');
-    //console.log(`Kirjautuneena sisään as ${signinUsername}`);
 
 // Sign in form submit handler
+    /**
+     * Funktio joka käsittelee sisäänkirjautumislomakkeen lähetyksen kun käyttäjä valitsee "sign in"-nappulan.
+     * @param {Object} event - Tapahtumankäsittelijä
+     */
     const handleSigninSubmit = (event) => {
         event.preventDefault();
         console.log(userDetails);
-        // Find user by username and password
+
+        /**
+         * Katsotaan löytyykö käyttäjän antama kirjautumisnimi kirjautumistiedoista. Jos löytyy palautetaan true, muuten false
+         */
         const userExists = userDetails.find((user) => {
             return user.username === signinUsername && user.password === signinPassword;
         });
 
-        // Show error if user not found
+        // Näytetään virheviesti jos käyttäjää ei löydy
         if (!userExists) {
             alert('Error in username or password');
             return;
         }
 
-        // Show welcome message if user found
+        // Näytetään tervetuloviesti jos käyttäjänimi ja salasana täsmäävät
         alert('Welcome ' + signinUsername);
         setSignedIn(true);
-
+        //asetetaan sessionStorageen tieto siitä, että käyttäjä on kirjautunut ja kerrotaan sessionStoragelle mikä käyttäjänimi on kirjautuneena
         sessionStorage.setItem("signedIn", JSON.stringify(true));
         sessionStorage.setItem('signinUsername', signinUsername);
 
-        // Redirect to homepage
-
-
-        // Reset form fields
+        // Tyhjennetään signin-formin kentät
         setSigninUsername('');
         setSigninPassword('');
+        //navigoidaan kotisivulle
         navigate('/');
     };
-
+    /**
+     * Funktio, joka käsittelee lomakkeen lähetyksen rekisteröintilomakkeella.
+     * @param {Event} event Lomakkeen lähetyksestä aiheutuva tapahtuma.
+     */
 // Register form submit handler
+    /**
+     * Funktio käsittelee rekisteröintilomakkeen lähetyksen kun käyttäjä on täyttänyt rekisteröintitiedot ja valitsee submit.
+     * @param event -Tapahtumankäsittelijä
+     */
     const handleRegisterSubmit = (event) => {
         event.preventDefault();
 
-        // Check if user already exists
+        /**
+         * Tarkistetaan löytyykö käyttäjänimi tai e-mail jo käyttäjätiedostoista
+         */
         const userExists = userDetails.find((user) => {
             return user.username === registerUsername || user.email === registerEmail;
         });
 
+        /**
+         * Tarkastetaan täsmäävätkö annettu salasana ja vahvistussalasana
+         * @returns {boolean}
+         */
         const unmatchedPassword = () => {
             return confirmPassword === registerPassword;
 
         }
-
+        //jos salasanat eivät vastaa toisiaan näytetään virheviesti
         if (!unmatchedPassword()) {
             alert("Passwords do not match!");
             return;
         }
-
+        //jos käyttäjänimi on liian lyhyt, näytetään virheviesti
         if (registerUsername.length < 4) {
             alert('Username must have at least 4 characters.');
             return;
         }
-
+        //jos salasana on liian lyhyt, näytetään virheviesti
         if (registerPassword.length < 8) {
             alert('Username must have at least 8 characters.');
             return;
         }
 
-        // Show error if user already exists
+        // Jos käyttäjänimi tai e-mail on rekisteröity jo aiemmin, näytetään virheviesti
         if (userExists) {
             alert('Username or email already in use');
             return;
         }
 
+        /**
+         * Muuttujassa on tallessa käyttäjän antamat tiedot
+         * @type {{password: string, email: string, username: string}}
+         */
         const formData = {
             username: registerUsername,
             email: registerEmail,
@@ -106,8 +168,7 @@ function SignIn() {
         console.log("Tässä kaikki käyttäjät uudelleen:");
         console.dir(users);
 
-//.
-        //fetch('/signin', { method: form.method, body: formData });
+        //Lähetetään serverille tiedot rekisteröitävistä käyttäjätiedoista
         axios
             .post('http://localhost:3001/signin', formData)
             .then((response) => {
@@ -127,6 +188,9 @@ function SignIn() {
 
     };
 
+    /**
+     * Funktio on tapahtumankäsittelijä rekisteröintilomakkeelle
+     */
     function handleRegistrationClick() {
         setShowRegistrationForm(prevState => !prevState);
         const registrationButton = document.getElementById("openregistration");
@@ -136,7 +200,7 @@ function SignIn() {
             registrationButton.classList.add("active");
         }
     }
-
+//Sivun sisältö ilman että rekisteröintilomaketta on avattu:
     if (!showRegistrationForm) {
         return (
             <Container fluid className="Signin px-0">
@@ -179,7 +243,8 @@ function SignIn() {
                 <Footer />
             </Container>
         );
-    } else {
+    } //Sivun sisältö niin että myös rekisteröintilomake on avoinna
+    else {
         return (
             <Container fluid className="Signin px-0">
                 <Header signedIn={signedIn}/>

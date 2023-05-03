@@ -6,14 +6,28 @@ const users = require("./userDetails.json");
 const recipesjson = require("./recipes.json");
 const fs = require("fs");
 
+/**
+ * Luodaan Express.js sovellus
+ * @type {*|Express}
+ */
 const app = express();
+/**
+ *Otetaan Node.js:n path-moduuli käyttöön
+ * @type {path.PlatformPath | path}
+ */
 const path = require('path');
 
+//Lisätään CORS-käytännön mukainen middleware Express-sovellukseen
 app.use(cors());
+//asetetaan json() -funktio middleware-ketjuun. Tämä middleware analysoi JSON-pyyntötietoja ja lisää niiden tulokset request -olion body-ominaisuuteen
 app.use(express.json());
+//asetetaan express-sovellus käyttämään middlewarea joka analysoi URL-koodattuja pyyntöjä
 app.use(express.urlencoded({ extended: true }));
 
-// MySQL:llän tietokannan config
+/**
+ * Luodaan MySQL tietokannan config ja yhteys
+ * @type {object}
+ */
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -22,6 +36,9 @@ const connection = mysql.createConnection({
     //port: 3307
 });
 
+/**
+ * Funktio luo yhteyden tietokantaan
+ */
 connection.connect((error) => {
     if (error) {
         console.log('Error connecting to database:', error);
@@ -47,8 +64,18 @@ connection.connect((error) => {
     });
 }*/
 //Kuvien lisäys kasnioon Multeria käyttäen
+
+/**
+ * Multerin avulla käsitellään tässä http-pyyntöjä jotka sisältävät kuvia
+ * @type {(function(*): (Multer|undefined))|{diskStorage?: (function(*): DiskStorage)|{}, memoryStorage?: (function(*): MemoryStorage)|{}, MulterError?: (function(*, *): void)|{}}}
+ */
 const multer = require('multer');
 //Lisätään kuvat img-kansioon
+
+/**
+ * Tallennetaan kuvat img-kansioon multeria käyttäen
+ * @type {DiskStorage}
+ */
 const storage = multer.diskStorage({
     destination: './img',
     filename: function(req, file, cb) {
@@ -56,6 +83,10 @@ const storage = multer.diskStorage({
     }
 });
 
+/**
+ * Funktio tarkistaa että siirretyt tiedostot ovat kuvatiedostoja
+ * @type {Multer|undefined}
+ */
 const upload = multer({
     storage: storage,
     //tarkistetaan filejen formaatti
@@ -71,15 +102,18 @@ const upload = multer({
     }
 });
 
-
-
+/**
+ * Funktio käsittelee kuvan lataamisen
+ */
 app.post('/upload', upload.single('image'), (req, res) => {
     console.log(req.file);
     res.json({ filename: req.file.filename });
 });
 
-// Tallennetaan käyttäjätiedot tietokantaan JA userDetails jsoniin
-
+/**
+ * Tallennetaan käyttäjätiedot tietokantaan ja userDetails json-tiedostoon
+ * Tiedot saadaan pyyntöobjektina req.body SignIn.js-sivun kautta axios.postilla
+ */
 app.post('/signin', (req, res) => {
     const { username, email, password } = req.body;
     console.log("Tässä uusi käyttäjä: " + JSON.stringify(req.body));
@@ -88,7 +122,7 @@ app.post('/signin', (req, res) => {
     users.push(req.body);
     console.log("Tässä kaikki käyttäjät uudelleen:");
     console.dir(users);
-
+//tallennus json-tiedostoon:
     fs.writeFile('./userDetails.json', JSON.stringify(users), (err) => {
         if (err) {
             console.log('Error writing to file:', err);
@@ -96,7 +130,7 @@ app.post('/signin', (req, res) => {
             console.log('User details saved to file successfully!');
         }
     });
-
+//tallennus tietokantaan
     const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
     connection.query(query, [username, email, password], (error, results) => {
         if (error) {
@@ -113,9 +147,14 @@ app.post('/signin', (req, res) => {
 
 // Tallennetaan recipes tietokantaan JA recipes jsoniin
 
+/**
+ * Tallennetaan uusi resepti recipes-tietokantaan ja recipes.json-tiedostoon.
+ * Tiedot saadaan pyyntöobjektina req.body NewRecipe.js-sivun kautta axios.postilla
+ *
+ */
 app.post('/NewRecipe', (req, res) => {
     const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = req.body;
-    //tallennetaan myös json-fileen
+    //tallennetaan json-fileen:
     recipesjson.push(req.body);
     fs.writeFile('./recipes.json', JSON.stringify(recipesjson), (err) => {
         if (err) {
@@ -124,7 +163,7 @@ app.post('/NewRecipe', (req, res) => {
             console.log('Recipe saved to json-file successfully!');
         }
     });
-
+//tallennetaan tietokantaan:
     const query = `INSERT INTO recipes (id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     connection.query(query, [id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description], (error, results) => {
@@ -138,8 +177,9 @@ app.post('/NewRecipe', (req, res) => {
     });
 });
 
-// Saadan kaikki reseptit tietokannasta UUSI
-
+/**
+ * Funktio hakee kaikki reseptit tietokannasta
+ */
 app.get('/recipes', (req, res) => {
     const query = `SELECT * FROM recipes`;
     connection.query(query, (error, results) => {
@@ -153,8 +193,10 @@ app.get('/recipes', (req, res) => {
     });
 });
 
-// Saadan yhden tietyn reseptin tietokannasta nimen perusteella UUSI JA EI KÄYTÖSSÄ
-
+/**
+ * Haetaan tietokannasta yhden reseptin tiedot
+ */
+//ei ole käytössä
 app.get('/recipes/:name', (req, res) => {
     const recipeName = req.params.name;
     const query = `SELECT * FROM recipes WHERE name = ?`;
@@ -172,9 +214,15 @@ app.get('/recipes/:name', (req, res) => {
 
 // Päivitetään recipe nimen perusteella
 
+/**
+ * Funktio päivittää reseptin nimen tietokantaan sekä recipes.json-tiedostoon.
+ * Päivitettävän reseptin id saadaan serverille pyyntöobjektina req.params kun userpage.js filessä välitetään se axios.put-kutsuna
+ */
 app.put('/recipes/:id', (req, res) => {
+    //päivitettävän reseptin id
     const { id } = req.params;
     console.log('Logataan id:', id);
+    //päivitettävän reseptin uusi nimi
     const { name } = req.body;
     console.log('Logataan nimi:', name);
     let recipesjson = fs.readFileSync('./recipes.json', 'utf-8');
@@ -187,12 +235,14 @@ app.put('/recipes/:id', (req, res) => {
         console.log('test');
         console.log('Logataan löydetty nimi json-filestä: ', recipes[index].name);
         recipes[index].name = name;
+        //päivitys recipes.json-tiedostoon
         fs.writeFile('./recipes.json', JSON.stringify(recipes), (err) => {
             if (err) {
                 console.log('Error writing to recipes-file:', err);
                 res.status(500).json({ message: 'Internal server error' });
             } else {
                 console.log('Recipe saved to json-file successfully!');
+                //päivitys recipes-tietokantaan
                 const query = `UPDATE recipes 
                        SET name = ?
                        WHERE id = ?`;
@@ -215,6 +265,10 @@ app.put('/recipes/:id', (req, res) => {
 
 
 // Poistetaan recipe nimen perusteella
+/**
+ * Funktio poistaa tietokannasta reseptin reseptin sen perusteella minkä niminen resepti on valittu poistettavaksi.
+ * Poistettavan reseptin nimi saadaan serverille pyyntöobjektina kun userpage.js filessä välitetään se axios.delete-kutsuna
+ */
 app.delete('/recipes/:name', (req, res) => {
     const name = req.params.name;
     const query = `DELETE FROM recipes WHERE name=?`;
@@ -229,6 +283,9 @@ app.delete('/recipes/:name', (req, res) => {
     });
 });
 
+/**
+ * Noutaa kuvan tiedostonimen perusteella
+ */
 app.get('/img/:imageName', (req, res) => {
     const imageName = req.params.imageName;
     const imagePath = path.join(__dirname, 'img', imageName);
@@ -243,7 +300,16 @@ app.get('/img/:imageName', (req, res) => {
 });
 
 // Start server
+/**
+ * Portti missä serveri käynnistetään
+ * @type {number}
+ */
 const PORT = 3001;
+/**
+ * Funktio käynnistää http-palvelimen määritellylle portille
+ * @param {number} PORT - Portti, jolla palvelin kuuntelee yhteyksiä.
+ * @param {function} callback - Suoritettava funktio, kun palvelin on käynnistetty onnistuneesti.
+ */
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
