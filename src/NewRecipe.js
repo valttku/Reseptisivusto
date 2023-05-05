@@ -31,7 +31,7 @@ const NewRecipe = () => {
      * Recipe category
      * @type {[array, function]}
      */
-    const [category, setCategory] = useState([]);
+    const [category, setCategory] = useState('');
     /**
      * Recipe author
      * @type {[string, function]}
@@ -146,16 +146,7 @@ const NewRecipe = () => {
      * @param {Object} event - Tapahtumankäsittelijä
      */
     const handleCategoryChange = (event) => {
-        //Huom tällä hetkellä poimii vain viimeisenä valitun kategorian
-        const options = event.target.options;
-        //valitut kategriat
-        const selectedCategories = [];
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) {
-                selectedCategories.push(options[i].value);
-            }
-        }
-        setCategory(selectedCategories.join(", "));
+        setCategory(event.target.value);
     };
 
     /**
