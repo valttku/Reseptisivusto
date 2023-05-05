@@ -50,7 +50,7 @@ connection.connect((error) => {
 
 //Lisää kaikki reseptit omaan tietokantaan:
 
-for (let i = 0; i < recipesjson.length; i++) {
+/*for (let i = 0; i < recipesjson.length; i++) {
     const recipe = recipesjson[i];
     const { id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description } = recipe;
     const query = `INSERT INTO recipes (id, name, ingredients, category, author, url, image, cookTime, recipeYield, date, prepTime, description) 
@@ -62,7 +62,7 @@ for (let i = 0; i < recipesjson.length; i++) {
             console.log('Recipe added to database:', recipe.name);
         }
     });
-}
+}*/
 //Kuvien lisäys kasnioon Multeria käyttäen
 
 /**
